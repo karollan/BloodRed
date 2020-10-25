@@ -1,14 +1,16 @@
 package com.example.bloodred;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-
 import androidx.core.content.ContextCompat;
 
 
@@ -19,8 +21,10 @@ import androidx.core.content.ContextCompat;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
-
+    private Bitmap background;
     private final Syringe syringe;
+    private int mWidth = this.getResources().getDisplayMetrics().widthPixels;
+    private int mHeight = this.getResources().getDisplayMetrics().heightPixels;
 
     public Game(Context context) {
         super(context);
@@ -32,7 +36,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
 
         // Initialize syringe
-        syringe = new Syringe(getContext(), 500, 500, 30);
+        syringe = new Syringe(getContext(), mWidth/2, mHeight/4);
 
         setFocusable(true);
     }
@@ -40,13 +44,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+        int action = event.getAction();
+        double x = event.getX();
+        double y = event.getY();
+
         //Handle touch event actions
-        switch(event.getAction()) {
+        switch(action) {
             case MotionEvent.ACTION_DOWN:
-                syringe.setPosition((double)event.getX(), (double)event.getY());
+                if (x >= (syringe.positionX - syringe.sprite.getWidth()/2) && x < (syringe.positionX + syringe.sprite.getWidth()/2) && y >= (syringe.positionY - syringe.sprite.getHeight()/2) && y < (syringe.positionY + syringe.sprite.getHeight()/2)) {
+                    syringe.setPosition(x, y);
+                }
                 return true;
             case MotionEvent.ACTION_MOVE:
-                syringe.setPosition((double)event.getX(), (double)event.getY());
+                if (x >= (syringe.positionX - syringe.sprite.getWidth()/2) && x < (syringe.positionX + syringe.sprite.getWidth()/2) && y >= (syringe.positionY - syringe.sprite.getHeight()/2) && y < (syringe.positionY + syringe.sprite.getHeight()/2)) {
+                    syringe.setPosition(x, y);
+                }
                 return true;
         }
 
@@ -73,7 +85,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         drawUPS(canvas);
         drawFPS(canvas);
-
         syringe.draw(canvas);
     }
 
@@ -94,6 +105,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTextSize(50);
         canvas.drawText( "FPS: " + averageFPS,  100,  200, paint);
     }
+
 
     public void update() {
         // Update game state

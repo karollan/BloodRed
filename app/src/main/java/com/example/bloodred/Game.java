@@ -21,8 +21,11 @@ import androidx.core.content.ContextCompat;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
-    private Bitmap background;
+
     private final Syringe syringe;
+    private final Patient patient;
+    private Background background;
+
     private int mWidth = this.getResources().getDisplayMetrics().widthPixels;
     private int mHeight = this.getResources().getDisplayMetrics().heightPixels;
 
@@ -33,10 +36,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
+
         gameLoop = new GameLoop(this, surfaceHolder);
+
+
 
         // Initialize syringe
         syringe = new Syringe(getContext(), mWidth/2, mHeight/4);
+
+        // Initialize patient
+        patient = new Patient(getContext(), 350, mHeight/2);
 
         setFocusable(true);
     }
@@ -67,6 +76,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        background = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.bg2));
         gameLoop.startLoop();
     }
 
@@ -83,8 +93,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+
+        //Background
+        background.draw(canvas);
+
         drawUPS(canvas);
         drawFPS(canvas);
+
+        patient.draw(canvas);
         syringe.draw(canvas);
     }
 
@@ -109,6 +125,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         // Update game state
+        background.update();
         syringe.update();
+        patient.update();
     }
 }

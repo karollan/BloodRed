@@ -7,6 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
+/**
+ * Background is an non-interactive object which purpose is to be Background image
+ *
+ **/
+
 public class Background {
 
     private Bitmap bitmap;

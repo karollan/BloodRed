@@ -2,6 +2,7 @@ package com.example.bloodred.object;
 
 import android.content.Context;
 
+import com.example.bloodred.CircleColliderPosition;
 import com.example.bloodred.R;
 
 /**
@@ -12,7 +13,7 @@ import com.example.bloodred.R;
 public class Syringe extends Sprite {
 
     public Syringe(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.syringe_1, positionX, positionY, scaleFactor);
+        super(context, R.drawable.syringe_1, positionX, positionY, scaleFactor, 30, CircleColliderPosition.BOTTOM_LEFT);
     }
 
     public void update() {
@@ -23,4 +24,5 @@ public class Syringe extends Sprite {
         this.positionX = positionX;
         this.positionY = positionY;
     }
+
 }

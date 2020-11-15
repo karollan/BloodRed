@@ -3,6 +3,7 @@ package com.example.bloodred.object;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.bloodred.CircleColliderPosition;
 import com.example.bloodred.R;
 
 /**
@@ -13,13 +14,18 @@ import com.example.bloodred.R;
 
 public class Patient extends Sprite{
 
+    public boolean isActive = true;
 
     public Patient(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.patient, positionX, positionY, scaleFactor);
+        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, CircleColliderPosition.CENTER_LEFT);
     }
 
     public void update() {
 
+    }
+
+    public void setInactive() {
+        isActive = false;
     }
 
 }

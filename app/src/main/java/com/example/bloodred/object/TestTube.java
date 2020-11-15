@@ -2,6 +2,7 @@ package com.example.bloodred.object;
 
 import android.content.Context;
 
+import com.example.bloodred.CircleColliderPosition;
 import com.example.bloodred.R;
 
 /**
@@ -9,9 +10,13 @@ import com.example.bloodred.R;
  * TestTube class in an extension of a Sprite, which is an extension of GameObject
  **/
 
+
 public class TestTube extends Sprite {
+
+    public boolean isActive = true;
+
     public TestTube(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.testtube, positionX, positionY, scaleFactor);
+        super(context, R.drawable.testtube, positionX, positionY, scaleFactor, 30, CircleColliderPosition.TOP);
 
 
     }
@@ -19,4 +24,9 @@ public class TestTube extends Sprite {
     public void update() {
 
     }
+
+    public void setInactive() {
+        isActive = false;
+    }
+
 }

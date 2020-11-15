@@ -12,12 +12,16 @@ import android.view.SurfaceView;
 import androidx.core.content.ContextCompat;
 
 import com.example.bloodred.object.GameButton;
+import com.example.bloodred.object.InfoButton;
+import com.example.bloodred.object.MenuButton;
+import com.example.bloodred.object.NextButton;
 import com.example.bloodred.object.Patient;
 import com.example.bloodred.object.Sprite;
 import com.example.bloodred.object.Syringe;
 import com.example.bloodred.object.TestTube;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -38,7 +42,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private final Syringe syringe;
     private final Patient patient;
-    private final GameButton nextButton;
+
+    //Buttons
+    private final NextButton nextButton;
+    private final MenuButton menuButton;
+    private final InfoButton infoButton;
 
     private List<TestTube> testTubeList = new ArrayList<TestTube>();
     private int firstTestTubeX = mWidth/2 - 200;
@@ -53,6 +61,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     //Current stage
     private int currentStage = 0;
 
+    //Activated TestTubes
+    private int activateTestTube = 0;
 
 
 
@@ -74,8 +84,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Initialize patient
         patient = new Patient(getContext(), mWidth/2, mHeight-150, 1.5f);
 
-        // Initialize next button
-        nextButton = new GameButton(getContext(), mWidth-120, mHeight-120, 0.5f);
+        // Initialize all buttons
+        nextButton = new NextButton(getContext(), mWidth-120, mHeight-120, 0.4f);
+        menuButton = new MenuButton(getContext(), 120, 120, 0.3f);
+        infoButton = new InfoButton(getContext(), mWidth-120, 120, 0.15f);
 
         setFocusable(true);
     }
@@ -147,8 +159,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawUPS(canvas);
         drawFPS(canvas);
 
-        //Next button is rendered
+        //All buttons are rendered
         nextButton.draw(canvas);
+        menuButton.draw(canvas);
+        infoButton.draw(canvas);
 
         //Objects drawn on First Stage
         if (currentStage == 0) {
@@ -176,7 +190,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         int color = ContextCompat.getColor(getContext(), R.color.magenta);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText( "UPS: " + averageUPS,  100,  100, paint);
+        canvas.drawText( "UPS: " + averageUPS,  100,  300, paint);
     }
 
     public void drawFPS(Canvas canvas) {
@@ -185,7 +199,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         int color = ContextCompat.getColor(getContext(), R.color.magenta);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText( "FPS: " + averageFPS,  100,  200, paint);
+        canvas.drawText( "FPS: " + averageFPS,  100,  400, paint);
     }
 
 
@@ -195,14 +209,20 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //Background objects which are always updated
         background.update();
         nextButton.update();
+        infoButton.update();
+        menuButton.update();
+
         syringe.update();
         patient.update();
 
         //Updates for objects on First Stage
         if (currentStage == 0) {
             //Check for collision between syringe and patient
-            if (Sprite.isColliding(patient, syringe)) {
+            if (CircleCollider.isColliding(patient.collider, syringe.collider) && patient.isActive) {
                 Log.d("Syringe and Patient", "Pobrano krew");
+
+                //Blood can be collected only once
+                patient.setInactive();
 
                 //Syringe gets fixed
 
@@ -220,10 +240,27 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 testTubeList.add(new TestTube(getContext(), firstTestTubeX, testTubeY, 0.7f));
                 firstTestTubeX += 200;
             }
-
             //Update state of each Test Tube
             for (TestTube tube : testTubeList) {
+                if (CircleCollider.isColliding(tube.collider, syringe.collider) && tube.isActive) {
+                    //Actualize active tube test number
+                    activateTestTube++;
+
+                    //Each tube works only once
+                    tube.setInactive();
+
+                    //Start animation on test tube
+
+
+                    Log.d("Syringe and Tube", "Wlano krew!");
+                }
+
                 tube.update();
+            }
+
+            //If all TestTubes were activated show buttons to choose BloodType
+            if (activateTestTube == 3) {
+
             }
 
         }

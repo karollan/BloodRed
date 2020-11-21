@@ -1,4 +1,4 @@
-package com.example.bloodred.object;
+package com.example.bloodred.gameobject;
 
 import android.graphics.Canvas;
 

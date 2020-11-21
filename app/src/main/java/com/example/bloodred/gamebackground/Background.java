@@ -1,4 +1,4 @@
-package com.example.bloodred;
+package com.example.bloodred.gamebackground;
 
 import android.content.Context;
 import android.graphics.Bitmap;

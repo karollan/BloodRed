@@ -1,4 +1,4 @@
-package com.example.bloodred.object;
+package com.example.bloodred.gamepanel;
 
 import android.content.Context;
 

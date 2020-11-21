@@ -1,9 +1,8 @@
-package com.example.bloodred.object;
+package com.example.bloodred.gameobject;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.example.bloodred.CircleColliderPosition;
+import com.example.bloodred.Data;
 import com.example.bloodred.R;
 
 /**
@@ -17,7 +16,7 @@ public class Patient extends Sprite{
     public boolean isActive = true;
 
     public Patient(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, CircleColliderPosition.CENTER_LEFT);
+        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, Data.CircleColliderPosition.CENTER_LEFT);
     }
 
     public void update() {

@@ -1,11 +1,8 @@
-package com.example.bloodred;
+package com.example.bloodred.gameobject;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
-
-import com.example.bloodred.object.GameObject;
 
 /**
  * CircleCollider is an object which only purpose is to detect collisions with other objects
@@ -47,10 +44,7 @@ public class CircleCollider extends GameObject {
     public static boolean isColliding(CircleCollider obj1, CircleCollider obj2) {
         double distance = getDistanceBetweenObjects(obj1, obj2);
         double distanceToCollision = obj1.getRadius() + obj2.getRadius();
-        if (distance < distanceToCollision) {
-            return true;
-        } else return false;
-
+        return distance < distanceToCollision;
     }
 
     private double getRadius() {

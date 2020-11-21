@@ -1,16 +1,13 @@
-package com.example.bloodred.object;
+package com.example.bloodred.gameobject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 
-import com.example.bloodred.CircleCollider;
-import com.example.bloodred.CircleColliderPosition;
+import com.example.bloodred.Data;
 
-import java.util.Vector;
 
 /**
  * Sprite is an object which implements method from GameObject for drawing the object as a image
@@ -20,10 +17,10 @@ import java.util.Vector;
 public abstract class Sprite extends GameObject {
     private Bitmap bmp;
 
-    private float width;
-    private float height;
+    private final float width;
+    private final float height;
     public CircleCollider collider;
-    private CircleColliderPosition colliderPositionRelativeToSprite;
+    private Data.CircleColliderPosition colliderPositionRelativeToSprite;
 
     //Contructor for Sprites without collider
     public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor) {
@@ -38,7 +35,7 @@ public abstract class Sprite extends GameObject {
     }
 
     //Contructor for Sprites with CircleCollider
-    public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor, float radius, CircleColliderPosition pos) {
+    public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor, float radius, Data.CircleColliderPosition pos) {
         //Call the original contructor
         this(context, drawing, positionX, positionY, scaleFactor);
 
@@ -63,9 +60,7 @@ public abstract class Sprite extends GameObject {
         double distanceToCollisionX = obj1.getWidth() / 4 + obj2.getWidth() / 4;
         double distanceToCollisionY = obj1.getHeight() / 4 + obj2.getHeight() / 4;
 
-        if (distance - distanceToCollisionX <= 0 || distance - distanceToCollisionY <= 0)
-            return true;
-        else return false;
+        return distance - distanceToCollisionX <= 0 || distance - distanceToCollisionY <= 0;
 
     }
 
@@ -85,8 +80,14 @@ public abstract class Sprite extends GameObject {
         return height;
     }
 
+    public static int checkScaledDrawableWidth(Context context, int drawable, float scaleFactor) {
+        Bitmap bmp;
+        bmp = BitmapFactory.decodeResource(context.getResources(), drawable);
+        return (int)(bmp.getWidth()*scaleFactor);
+    }
+
     //ColliderPos function checks what position is needed through checking enum and returns vector with x and y
-    private PointF colliderPos(CircleColliderPosition pos) {
+    private PointF colliderPos(Data.CircleColliderPosition pos) {
         PointF position = new PointF();
         switch (pos) {
             case TOP:

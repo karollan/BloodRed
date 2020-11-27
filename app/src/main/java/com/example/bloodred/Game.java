@@ -10,8 +10,11 @@ import android.view.SurfaceView;
 
 import com.example.bloodred.gamebackground.Background;
 import com.example.bloodred.gameobject.BloodBag;
+import com.example.bloodred.gameobject.BloodRack;
 import com.example.bloodred.gameobject.CircleCollider;
+import com.example.bloodred.gameobject.Collider;
 import com.example.bloodred.gamepanel.BloodGroupButton;
+import com.example.bloodred.gamepanel.BloodType;
 import com.example.bloodred.gamepanel.InfoButton;
 import com.example.bloodred.gamepanel.MenuButton;
 import com.example.bloodred.gamepanel.NextButton;
@@ -31,10 +34,10 @@ import static java.util.Collections.swap;
 
 
 
-/*
+/**
  * Game manages all object in the game and is responsible for updating all states and render
  * all objects to the screen
-*/
+**/
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
@@ -47,9 +50,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private static final int MAX_BLOOD_GROUP_BUTTON_AMOUNT = 4;
     private static final int MAX_RH_BUTTON_AMOUNT = 2;
     private static final int MAX_BLOOD_BAG_AMOUNT = 8;
+    private static final int MAX_NUMBER_OF_MISTAKES = 3;
 
+    //Syringe
     private final Syringe syringe;
+
+    //Patient
     private final Patient patient;
+
+    //BloodRack
+    private final BloodRack bloodRack;
 
     //Performance
     private Performance performance;
@@ -83,12 +93,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     //Background
     private Background background;
 
-    //Blood Group
-    private final Data.BloodGroups bloodGroup;
-    private final Data.Rh rhType;
+    //Blood Type
+    private final BloodType bloodType;
 
     //Current Blood Group chosen by user
     private Data.BloodGroups currentBloodGroup;
+
+    //Possible donors
+    private int numberOfDonors;
+
+    //Current number of mistakes
+    private int numberOfMistakes = 0;
 
     // Status of current stage, if stage is cleared set true
     public static boolean stageCleared;
@@ -112,12 +127,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
 
 
-
         // Initialize syringe
         syringe = new Syringe(getContext(), mWidth/2, mHeight/4, 0.8f);
 
         // Initialize patient
         patient = new Patient(getContext(), mWidth/2, mHeight-150, 1.5f);
+
+        //Initialize bloodRack
+        bloodRack = new BloodRack(getContext(), 200, mHeight/1.5f, 0.7f);
 
         // Initialize all buttons
         nextButton = new NextButton(getContext(), mWidth-120, mHeight-120, 0.4f);
@@ -125,8 +142,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         infoButton = new InfoButton(getContext(), mWidth-120, 120, 0.15f);
 
         //Randomize Blood Group
-        bloodGroup = Data.BloodGroups.getRandomBloodGroup();
-        rhType = Data.Rh.getRandomRh();
+        bloodType = new BloodType(Data.Rh.getRandomRh(), Data.BloodGroups.getRandomBloodGroup());
+        numberOfDonors = BloodType.numberOfPossibleDonors(bloodType);
 
         //Initialize game panels
         performance = new Performance(gameLoop, getContext());
@@ -224,12 +241,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 //Click on one of RhButtons
                 for (RhButton btn : RhButtonList) {
                     if (x >= (btn.getPositionX() - btn.getWidth()/2) && x < (btn.getPositionX() + btn.getWidth()/2) && y >= (btn.getPositionY() - btn.getHeight()/2) && y < (btn.getPositionY() + btn.getHeight()/2)) {
-                        if (currentBloodGroup == bloodGroup && btn.getRhType() == rhType) {
-                            Log.d("DOBRY WYBOR", currentBloodGroup.toString() + bloodGroup.toString() + btn.getRhType().toString() + rhType.toString());
+                        if (currentBloodGroup == bloodType.getBloodGroup() && btn.getRhType() == bloodType.getRhType()) {
+                            Log.d("DOBRY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
 
                             stageCleared = true;
                         } else {
-                            Log.d("ZLY WYBOR", currentBloodGroup.toString() + bloodGroup.toString() + btn.getRhType().toString() + rhType.toString());
+                            Log.d("ZLY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                             for (BloodGroupButton BGB : BloodGroupButtonList) {
                                 BGB.setInactive();
                             }
@@ -269,6 +286,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         background = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
+        if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
+            gameLoop = new GameLoop(this, surfaceHolder);
+        }
         gameLoop.startLoop();
     }
 
@@ -298,13 +318,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         menuButton.draw(canvas);
         infoButton.draw(canvas);
 
-        //Objects drawn on First Stage
+        /**
+         * DRAWING FOR STAGE 1
+         *
+         **/
         if (currentStage == 0) {
             patient.draw(canvas);
             syringe.draw(canvas);
         }
 
-        //Objects drawn of Second Stage
+        /**
+         * DRAWING FOR STAGE 2
+         *
+         **/
         else if (currentStage == 1) {
 
             //Syringe in being drawn until all test tubes are activated
@@ -333,11 +359,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
 
-        //Objects drawn on Third Stage
+        /**
+         * DRAWING FOR STAGE 3
+         *
+         **/
         else if (currentStage == 2) {
             for (BloodBag bag : bloodBagList) {
-                bag.draw(canvas);
+                if (bag.doNotDraw()) continue;
+                else bag.draw(canvas);
             }
+
+            bloodRack.draw(canvas);
         }
     }
 
@@ -354,14 +386,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         syringe.update();
         patient.update();
 
-        //Updates for objects on First Stage
+        /**
+         * UPDATES FOR STAGE 1
+         *
+         **/
         if (currentStage == 0) {
             //Check for collision between syringe and patient
-            if (CircleCollider.isColliding(patient.collider, syringe.collider) && patient.isActive) {
+            if (Collider.isColliding(patient.collider, syringe.collider)) {
                 Log.d("Syringe and Patient", "Pobrano krew");
 
                 //Blood can be collected only once
-                patient.setInactive();
+                patient.collider.setInactive();
 
                 //Syringe gets fixed
 
@@ -372,7 +407,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 stageCleared = true;
             }
         }
-        //Updates for objects of Second Stage
+        /**
+         * UPDATES FOR STAGE 2
+         *
+         **/
         else if (currentStage == 1) {
             //Create TestTubes
             if (testTubeList.size() < MAX_TEST_TUBE_AMOUNT) {
@@ -381,12 +419,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
             //Update state of each Test Tube
             for (TestTube tube : testTubeList) {
-                if (CircleCollider.isColliding(tube.collider, syringe.collider) && tube.isActive) {
+                if (Collider.isColliding(tube.collider, syringe.collider)) {
                     //Actualize active tube test number
                     activateTestTube++;
 
                     //Each tube works only once
-                    tube.setInactive();
+                    tube.collider.setInactive();
 
                     //Start animation on test tube
 
@@ -401,7 +439,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             if (activateTestTube == MAX_TEST_TUBE_AMOUNT) {
 
                 // TYMCZASOWO
-                stageCleared = true;
+                //stageCleared = true;
 
                 //Create BloodGroupButtons
                 if (BloodGroupButtonList.size() < MAX_BLOOD_GROUP_BUTTON_AMOUNT) {
@@ -423,7 +461,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
             }
-
+            /**
+             * UPDATES FOR STAGE 3
+             *
+             **/
         } else if (currentStage == 2) {
             //Create Blood Bags
             if (bloodBagList.size() < MAX_BLOOD_BAG_AMOUNT) {
@@ -442,6 +483,36 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            //Check if the BloodBag collided with BloodRack
+            for (BloodBag bag : bloodBagList) {
+                if (Collider.isColliding(bag.collider, bloodRack.collider) && numberOfMistakes < MAX_NUMBER_OF_MISTAKES) {
+                    if (BloodType.checkBloodCompatibility(bag.getBloodType(), bloodType)) {
+                        Log.d("Number of donors", String.valueOf(numberOfDonors));
+                        Log.d("BloodBag", "Removed");
+                        bag.setDoNotDraw();
+                        bag.collider.setInactive();
+                        numberOfDonors--;
+                        Log.d("Number of donors", String.valueOf(numberOfDonors));
+                    } else {
+                        bag.collider.setInactive();
+                        bag.setOriginalPosition();
+                        numberOfMistakes++;
+                        Log.d("Number of mistakes", String.valueOf(numberOfMistakes));
+                    }
+                }
+            }
+            //Update state of BloodRack
+            bloodRack.update();
+
+            //GAME OVER
+            if (numberOfMistakes == MAX_NUMBER_OF_MISTAKES) {
+
+            }
+
         }
+    }
+
+    public void pause() {
+        gameLoop.stopLoop();
     }
 }

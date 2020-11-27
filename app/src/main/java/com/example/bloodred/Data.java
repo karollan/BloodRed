@@ -1,5 +1,7 @@
 package com.example.bloodred;
 
+import com.example.bloodred.gamepanel.BloodType;
+
 import java.util.Random;
 
 /**
@@ -8,7 +10,8 @@ import java.util.Random;
  **/
 
 public class Data {
-        public enum CircleColliderPosition {
+
+        public enum ColliderPosition {
                 CENTER,
                 BOTTOM,
                 RIGHT,
@@ -19,7 +22,13 @@ public class Data {
                 BOTTOM_LEFT,
                 BOTTOM_RIGHT,
                 CENTER_LEFT,
-                CENTER_RIGHT
+                CENTER_RIGHT,
+                CENTER_TOP,
+                CENTER_BOTTOM,
+                CENTER_TOP_RIGHT,
+                CENTER_TOP_LEFT,
+                CENTER_BOTTOM_LEFT,
+                CENTER_BOTTOM_RIGHT,
         }
 
         public enum BloodGroups {
@@ -52,17 +61,5 @@ public class Data {
                 }
         }
 
-
-        //W TRAKCIE OPRACOWYWANIA
-        public static int numberOfPossibleBloodBags(BloodGroups bloodGroup, Rh rhType) {
-                int numberOfPossibleBloodBags = 0;
-
-                if (bloodGroup == BloodGroups.A && rhType == Rh.RhPlus) {
-
-                }
-
-
-                return numberOfPossibleBloodBags;
-        }
 }
 

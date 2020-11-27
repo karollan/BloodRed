@@ -13,20 +13,14 @@ import com.example.bloodred.R;
 
 public class TestTube extends Sprite {
 
-    public boolean isActive = true;
-
     public TestTube(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.testtube, positionX, positionY, scaleFactor, 30, Data.CircleColliderPosition.TOP);
+        super(context, R.drawable.testtube, positionX, positionY, scaleFactor, 30, Data.ColliderPosition.TOP);
 
 
     }
 
     public void update() {
 
-    }
-
-    public void setInactive() {
-        isActive = false;
     }
 
 }

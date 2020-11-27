@@ -19,8 +19,8 @@ public abstract class Sprite extends GameObject {
 
     private final float width;
     private final float height;
-    public CircleCollider collider;
-    private Data.CircleColliderPosition colliderPositionRelativeToSprite;
+    public Collider collider;
+    private Data.ColliderPosition colliderPositionRelativeToSprite;
 
     //Contructor for Sprites without collider
     public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor) {
@@ -34,35 +34,34 @@ public abstract class Sprite extends GameObject {
         height = bmp.getHeight();
     }
 
+    /**
+     * Colliders position is relative to Sprite position, all possible positions are listed in Data class -> ColliderPosition enum
+     * It is easier to set collider on fixed positions relative to sprite size than to choose each position manually
+     **/
+
     //Contructor for Sprites with CircleCollider
-    public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor, float radius, Data.CircleColliderPosition pos) {
-        //Call the original contructor
+    public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor, float radius, Data.ColliderPosition pos) {
+        //Call the basic constructor
         this(context, drawing, positionX, positionY, scaleFactor);
 
         //Set the collider
-        /**
-         * Circle collider position is relative to Sprite position, all possible positions are listed in CircleColliderPosition enum
-         * It is easier to set collider on fixed positions relative to sprite size than to choose each position manually
-         **/
         this.colliderPositionRelativeToSprite = pos;
         PointF position = colliderPos(this.colliderPositionRelativeToSprite);
 
         collider = new CircleCollider(positionX, positionY, radius, position.x, position.y);
     }
 
-    /**
-     * IsColliding checks if two Sprite objects are colliding, based on their positions
-     * and circumference of a rectangle *IF NEEDED CREATE RECTANGLECOLLIDER CLASS FOR THIS FUNCTION*
-     **/
+    //Constructor for Sprites with RectangleCollider
+    public Sprite (Context context, int drawing, double positionX, double positionY, float scaleFactor, double width, double height,  Data.ColliderPosition pos) {
+        //Call the basic constructor
+        this(context, drawing, positionX, positionY, scaleFactor);
 
-    public static boolean isColliding(Sprite obj1, Sprite obj2) {
-        double distance = getDistanceBetweenObjects(obj1, obj2);
-        double distanceToCollisionX = obj1.getWidth() / 4 + obj2.getWidth() / 4;
-        double distanceToCollisionY = obj1.getHeight() / 4 + obj2.getHeight() / 4;
-
-        return distance - distanceToCollisionX <= 0 || distance - distanceToCollisionY <= 0;
-
+        //Set the collider
+        this.colliderPositionRelativeToSprite = pos;
+        PointF position = colliderPos(this.colliderPositionRelativeToSprite);
+        collider = new RectangleCollider(positionX, positionY, position.x, position.y, width, height);
     }
+
 
     public void draw(Canvas canvas) {
         if (collider != null) {
@@ -80,14 +79,23 @@ public abstract class Sprite extends GameObject {
         return height;
     }
 
+
+    //Check sprites width and height with consideration of scaling
     public static int checkScaledDrawableWidth(Context context, int drawable, float scaleFactor) {
         Bitmap bmp;
         bmp = BitmapFactory.decodeResource(context.getResources(), drawable);
         return (int)(bmp.getWidth()*scaleFactor);
     }
 
+    public static int checkScaledDrawableHeight(Context context, int drawable, float scaleFactor) {
+        Bitmap bmp;
+        bmp = BitmapFactory.decodeResource(context.getResources(), drawable);
+        return (int)(bmp.getHeight()*scaleFactor);
+    }
+
+
     //ColliderPos function checks what position is needed through checking enum and returns vector with x and y
-    private PointF colliderPos(Data.CircleColliderPosition pos) {
+    private PointF colliderPos(Data.ColliderPosition pos) {
         PointF position = new PointF();
         switch (pos) {
             case TOP:
@@ -119,8 +127,26 @@ public abstract class Sprite extends GameObject {
             case CENTER_RIGHT:
                 position.set(width/4, 0f);
                 return position;
-            case CENTER_LEFT:_RIGHT:
+            case CENTER_LEFT:
                 position.set(-width/4, 0f);
+                return position;
+            case CENTER_TOP:
+                position.set(0f, -height/4);
+                return position;
+            case CENTER_BOTTOM:
+                position.set(0f, height/4);
+                return position;
+            case CENTER_TOP_LEFT:
+                position.set(-width/4, -height/4);
+                return position;
+            case CENTER_TOP_RIGHT:
+                position.set(width/4, -height/4);
+                return position;
+            case CENTER_BOTTOM_LEFT:
+                position.set(-width/4, height/4);
+                return position;
+            case CENTER_BOTTOM_RIGHT:
+                position.set(width/4, height/4);
                 return position;
             default:
                 position.set(0f, 0f);

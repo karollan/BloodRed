@@ -7,24 +7,19 @@ import com.example.bloodred.R;
 
 /**
  * Patient is an interactive element of background which cannot be moved
+ * It has CircleCollider attached
  * Patient class in an extension of a Sprite, which is an extension of GameObject
  **/
 
 
 public class Patient extends Sprite{
 
-    public boolean isActive = true;
-
     public Patient(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, Data.CircleColliderPosition.CENTER_LEFT);
+        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, Data.ColliderPosition.CENTER_LEFT);
     }
 
     public void update() {
 
-    }
-
-    public void setInactive() {
-        isActive = false;
     }
 
 }

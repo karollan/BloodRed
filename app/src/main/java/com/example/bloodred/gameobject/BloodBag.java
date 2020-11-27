@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.example.bloodred.Data;
 import com.example.bloodred.R;
+import com.example.bloodred.gamepanel.BloodType;
+
 
 public class BloodBag extends Sprite {
 
@@ -22,11 +24,15 @@ public class BloodBag extends Sprite {
     private double originalPositionY;
     private boolean active = false;
 
-    private Data.BloodGroups bloodGroup;
-    private Data.Rh rhType;
+    private BloodType bloodType;
+    private boolean doNotDraw = false;
 
     public BloodBag(Context context, int drawing, double positionX, double positionY, float scaleFactor) {
-        super(context, drawing, positionX, positionY, scaleFactor);
+        super(context, drawing, positionX, positionY, scaleFactor,
+                Sprite.checkScaledDrawableWidth(context, drawing, scaleFactor) * 0.5,
+                Sprite.checkScaledDrawableHeight(context, drawing, scaleFactor) * 0.5,
+                Data.ColliderPosition.CENTER
+                );
         this.originalPositionX = positionX;
         this.originalPositionY = positionY;
 
@@ -39,36 +45,28 @@ public class BloodBag extends Sprite {
     private void decideBloodType(int drawing) {
         switch (drawing) {
             case R.drawable.bbarhplus:
-                bloodGroup = Data.BloodGroups.A;
-                rhType = Data.Rh.RhPlus;
+                bloodType = new BloodType(Data.Rh.RhPlus, Data.BloodGroups.A);
                 break;
             case R.drawable.bbarhminus:
-                bloodGroup = Data.BloodGroups.A;
-                rhType = Data.Rh.RhMinus;
+                bloodType = new BloodType(Data.Rh.RhMinus, Data.BloodGroups.A);
                 break;
             case R.drawable.bbbrhplus:
-                bloodGroup = Data.BloodGroups.B;
-                rhType = Data.Rh.RhPlus;
+                bloodType = new BloodType(Data.Rh.RhPlus, Data.BloodGroups.B);
                 break;
             case R.drawable.bbbrhminus:
-                bloodGroup = Data.BloodGroups.B;
-                rhType = Data.Rh.RhMinus;
+                bloodType = new BloodType(Data.Rh.RhMinus, Data.BloodGroups.B);
                 break;
             case R.drawable.bbabrhplus:
-                bloodGroup = Data.BloodGroups.AB;
-                rhType = Data.Rh.RhPlus;
+                bloodType = new BloodType(Data.Rh.RhPlus, Data.BloodGroups.AB);
                 break;
             case R.drawable.bbabrhminus:
-                bloodGroup = Data.BloodGroups.AB;
-                rhType = Data.Rh.RhMinus;
+                bloodType = new BloodType(Data.Rh.RhMinus, Data.BloodGroups.AB);
                 break;
             case R.drawable.bb0rhplus:
-                bloodGroup = Data.BloodGroups.Zero;
-                rhType = Data.Rh.RhPlus;
+                bloodType = new BloodType(Data.Rh.RhPlus, Data.BloodGroups.Zero);
                 break;
             case R.drawable.bb0rhminus:
-                bloodGroup = Data.BloodGroups.Zero;
-                rhType = Data.Rh.RhMinus;
+                bloodType = new BloodType(Data.Rh.RhMinus, Data.BloodGroups.Zero);
                 break;
         }
     }
@@ -82,6 +80,18 @@ public class BloodBag extends Sprite {
     public void setOriginalPosition() {
         this.positionX = originalPositionX;
         this.positionY = originalPositionY;
+    }
+
+    public BloodType getBloodType() {
+        return this.bloodType;
+    }
+
+    public void setDoNotDraw() {
+        doNotDraw = true;
+    }
+
+    public boolean doNotDraw() {
+        return doNotDraw;
     }
 
     public void setActive() {

@@ -13,7 +13,7 @@ import com.example.bloodred.R;
 public class Syringe extends Sprite {
 
     public Syringe(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.syringe_1, positionX, positionY, scaleFactor, 30, Data.CircleColliderPosition.BOTTOM_LEFT);
+        super(context, R.drawable.syringe_1, positionX, positionY, scaleFactor, 30, Data.ColliderPosition.BOTTOM_LEFT);
     }
 
     public void update() {

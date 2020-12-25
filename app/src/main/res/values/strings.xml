@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BloodRed</string>
+    <string name="Stage2">"How do you determine a patient's blood type? \n1. Mix!\nFirst mix the patient's blood with three different reagents including either of the three different antibodies, A, B or Rh antibodies!\n2. Look for agglutination!\nThen you take a look at what has happened. In which mixtures has clumping, or agglutination, occurred? The agglutination indicates that the blood has reacted with a certain antibody and is therefore not compatible with blood containing that kind of antibody. If the blood does not agglutinate, it indicates that the blood does not have the antigens binding the special antibody in the reagent." </string>
 </resources>

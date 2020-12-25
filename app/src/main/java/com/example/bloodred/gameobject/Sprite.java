@@ -79,6 +79,10 @@ public abstract class Sprite extends GameObject {
         return height;
     }
 
+    //Check if sprite was clicked by user
+    public static boolean isClicked(Sprite sprite, double x, double y) {
+        return x >= (sprite.getPositionX() - sprite.getWidth()/2) && x < (sprite.getPositionX() + sprite.getWidth()/2) && y >= (sprite.getPositionY() - sprite.getHeight()/2) && y < (sprite.getPositionY() + sprite.getHeight()/2);
+    }
 
     //Check sprites width and height with consideration of scaling
     public static int checkScaledDrawableWidth(Context context, int drawable, float scaleFactor) {
@@ -92,7 +96,6 @@ public abstract class Sprite extends GameObject {
         bmp = BitmapFactory.decodeResource(context.getResources(), drawable);
         return (int)(bmp.getHeight()*scaleFactor);
     }
-
 
     //ColliderPos function checks what position is needed through checking enum and returns vector with x and y
     private PointF colliderPos(Data.ColliderPosition pos) {

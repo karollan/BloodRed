@@ -1,7 +1,8 @@
-package com.example.bloodred;
+package com.example.bloodred.gamepanel;
 
 import android.content.Context;
 
+import com.example.bloodred.R;
 import com.example.bloodred.gamepanel.GameButton;
 
 public class RestartButton extends GameButton {

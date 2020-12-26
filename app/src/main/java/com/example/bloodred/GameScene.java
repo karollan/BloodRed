@@ -2,9 +2,11 @@ package com.example.bloodred;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import com.example.bloodred.gamebackground.Background;
 import com.example.bloodred.gameobject.BloodBag;
 import com.example.bloodred.gameobject.BloodRack;
 import com.example.bloodred.gameobject.Collider;
@@ -18,13 +20,14 @@ import com.example.bloodred.gamepanel.InfoButton;
 import com.example.bloodred.gamepanel.MenuButton;
 import com.example.bloodred.gamepanel.NextButton;
 import com.example.bloodred.gamepanel.RhButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.swap;
 
-public class GameScene {
+public class GameScene extends ScenePrototype{
 
     private static final int MAX_TEST_TUBE_AMOUNT = 3;
     private static final int MAX_BLOOD_GROUP_BUTTON_AMOUNT = 4;
@@ -39,11 +42,6 @@ public class GameScene {
     private final NextButton nextButton;
     private final MenuButton menuButton;
     private final InfoButton infoButton;
-    private final BloodType bloodType;
-    private final int mWidth;
-    private final int mHeight;
-    private final Context context;
-    private boolean active = true;
 
     //TestTubes
     private final List<TestTube> testTubeList = new ArrayList<TestTube>();
@@ -70,7 +68,7 @@ public class GameScene {
     private Data.BloodGroups currentBloodGroup;
 
     //Blood Type
-    //private final BloodType bloodType;
+    private final BloodType bloodType;
 
     //Possible donors
     private int numberOfDonors;
@@ -86,15 +84,14 @@ public class GameScene {
 
     //Activated TestTubes
     private int activateTestTube = 0;
-    private SceneManager sceneManager;
+    private boolean gameResult;
 
+    //Choice message
+    private ChoiceMessage choiceMessage;
+    private boolean isChoiceMessageClosed = true;
 
-    public GameScene(Context context, int mWidth, int mHeight, SceneManager sceneManager) {
-        this.mWidth = mWidth;
-        this.mHeight = mHeight;
-        this.context = context;
-
-        this.sceneManager = sceneManager;
+    public GameScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager) {
+        super(res, context, mWidth, mHeight, sceneManager);
 
         //Initialize variables values
         firstTestTubeX = mWidth/2 - 200;
@@ -123,19 +120,8 @@ public class GameScene {
         numberOfDonors = BloodType.numberOfPossibleDonors(bloodType);
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive() {
-        active = true;
-    }
-
-    public void setInactive() {
-        active = false;
-    }
-
-    public void draw(Canvas canvas) {
+    public void drawScene(Canvas canvas) {
+        background.draw(canvas);
         nextButton.draw(canvas);
         menuButton.draw(canvas);
         infoButton.draw(canvas);
@@ -176,8 +162,16 @@ public class GameScene {
                         }
                     }
                 }
-
             }
+
+            //Draw choice message
+            try {
+                if (choiceMessage.isCreated()) {
+                    choiceMessage.draw(canvas);
+                }
+            }
+            catch(Exception e){}
+
         }
 
 
@@ -324,7 +318,14 @@ public class GameScene {
 
             //GAME OVER
             if (numberOfMistakes == MAX_NUMBER_OF_MISTAKES) {
+                gameResult = false;
+                sceneManager.drawGameOverScene();
+            }
 
+            //GAME WON
+            if (numberOfDonors == 0) {
+                gameResult = true;
+                sceneManager.drawGameOverScene();
             }
 
         }
@@ -337,7 +338,9 @@ public class GameScene {
         }
 
         if (Sprite.isClicked(infoButton, x, y)) {
+            Log.d("dziala", "click");
             sceneManager.drawInfoScene();
+            Log.d("klikanie", "aktywnosc");
         }
 
         //Move syringe
@@ -422,9 +425,12 @@ public class GameScene {
             if (Sprite.isClicked(btn, x, y)) {
                 if (currentBloodGroup == bloodType.getBloodGroup() && btn.getRhType() == bloodType.getRhType()) {
                     Log.d("DOBRY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
-
+                    choiceMessage = new ChoiceMessage(true, context, mWidth, mHeight);
+                    isChoiceMessageClosed = false;
                     stageCleared = true;
                 } else {
+                    choiceMessage = new ChoiceMessage(false, context, mWidth, mHeight);
+                    isChoiceMessageClosed = false;
                     Log.d("ZLY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                     for (BloodGroupButton BGB : BloodGroupButtonList) {
                         BGB.setInactive();
@@ -432,6 +438,7 @@ public class GameScene {
                 }
             }
         }
+
     }
 
     public void moveEvents(double x, double y) {
@@ -459,6 +466,21 @@ public class GameScene {
 
     public int getCurrentStage() {
         return currentStage;
+    }
+
+    public boolean getGameResult() {
+        return gameResult;
+    }
+
+    public boolean isChoiceMessageClosed() {return isChoiceMessageClosed;}
+
+    public void choiceMessageClickEvents(double x, double y) {
+        try {
+            if (Sprite.isClicked(choiceMessage, x, y)) {
+                choiceMessage = null;
+                isChoiceMessageClosed = true;
+            }
+        } catch (Exception e){}
     }
 
 }

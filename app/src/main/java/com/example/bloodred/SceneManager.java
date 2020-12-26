@@ -3,9 +3,11 @@ package com.example.bloodred;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 
 public class SceneManager {
+    private final GameOverScene gameOverScene;
     private MenuScene menuScene;
     protected final int mWidth;
     protected final int mHeight;
@@ -19,42 +21,60 @@ public class SceneManager {
         this.mWidth = mWidth;
         this.mHeight = mHeight;
         menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
-        gameScene = new GameScene(context, mWidth, mHeight, this);
+        gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this);
         infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
+        gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
+        gameScene.setActive();
     }
 
     public void draw(Canvas canvas) {
 
         if (menuScene.isActive()) {
-            menuScene.draw(canvas);
+            menuScene.drawScene(canvas);
         }
 
         if (gameScene.isActive()) {
-            gameScene.draw(canvas);
+            gameScene.drawScene(canvas);
         }
 
         if (infoScene.isActive()) {
-            infoScene.draw(canvas);
+            Log.d("klikanie", "aktywnosc");
+            infoScene.drawScene(canvas);
+        }
+
+        if (gameOverScene.isActive()) {
+            gameOverScene.drawScene(canvas);
         }
 
     }
 
     //Tymczasowe rozwiązanie
     public void drawInfoScene() {
+        Log.d("klikanie", "aktywnosc");
         infoScene.setActive();
         gameScene.setInactive();
         menuScene.setInactive();
+        gameOverScene.setInactive();
     }
 
     public void drawGameScene() {
-        menuScene.setInactive();
         gameScene.setActive();
+        menuScene.setInactive();
         infoScene.setInactive();
+        gameOverScene.setInactive();
     }
 
     public void drawMenuScene() {
-        gameScene.setInactive();
         menuScene.setActive();
+        gameScene.setInactive();
+        infoScene.setInactive();
+        gameOverScene.setInactive();
+    }
+
+    public void drawGameOverScene() {
+        gameOverScene.setActive();
+        menuScene.setInactive();
+        gameScene.setInactive();
         infoScene.setInactive();
     }
 
@@ -70,10 +90,16 @@ public class SceneManager {
         }
     }
 
-    public void gameSceneClickEvents(double x, double y) {
-        if (gameScene.isActive()) {
-            gameScene.clickEvents(x, y);
+    public void gameOverSceneClickEvents(double x, double y) {
+        if (gameOverScene.isActive()) {
+            gameOverScene.clickEvents(x, y);
         }
+    }
+
+    public void gameSceneClickEvents(double x, double y) {
+        if (gameScene.isActive() && gameScene.isChoiceMessageClosed()) {
+            gameScene.clickEvents(x, y);
+        } else gameScene.choiceMessageClickEvents(x, y);
     }
 
     public void gameSceneMoveEvents(double x, double y) {
@@ -96,9 +122,11 @@ public class SceneManager {
         return gameScene.getCurrentStage();
     }
 
+    public boolean getGameResult() {return gameScene.getGameResult();}
+
     public void restartGame() {
         menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
-        gameScene = new GameScene(context, mWidth, mHeight, this);
+        gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this);
         infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
     }
 }

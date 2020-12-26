@@ -51,9 +51,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Performance performance;
 
 
-    //Background
-    private Background background;
-
     public Game(Context context) {
         super(context);
 
@@ -87,6 +84,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 sceneManager.menuSceneClickEvents(x, y);
                 sceneManager.gameSceneClickEvents(x, y);
                 sceneManager.infoSceneClickEvents(x, y);
+                sceneManager.gameOverSceneClickEvents(x, y);
 
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -105,7 +103,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        background = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.bg));
         if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
             gameLoop = new GameLoop(this, surfaceHolder);
         }
@@ -126,9 +123,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        //Background
-        background.draw(canvas);
-
         sceneManager.draw(canvas);
 
     }
@@ -137,7 +131,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         // Update game state
 
-        background.update();
         sceneManager.update();
     }
 

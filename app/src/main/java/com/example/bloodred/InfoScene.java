@@ -11,120 +11,135 @@ import android.graphics.Rect;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.bloodred.gamebackground.Background;
 import com.example.bloodred.gameobject.Sprite;
+import com.example.bloodred.gamepanel.NextButton;
 import com.example.bloodred.gamepanel.ResumeButton;
 
 
-public class InfoScene {
+public class InfoScene extends ScenePrototype{
 
 
-    private final SceneManager sceneManager;
-    private Bitmap bitmap;
+    //private final SceneManager sceneManager;
+    private final NextButton nextButton;
+    private final PreviousButton previousButton;
     private final ResumeButton resumeButton;
-    private final Context context;
-    private boolean active = false;
+    private int currentPage = 0;
+    private int lastPage;
 
     public InfoScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager) {
-        this.context = context;
-        this.sceneManager = sceneManager;
+        super(res, context, mWidth, mHeight, sceneManager);
 
-        bitmap = res;
-        resumeButton = new ResumeButton(context, mWidth - 120, mHeight - 120, 0.4f);
+        resumeButton = new ResumeButton(context, mWidth/2,  mHeight - 120, 0.3f);
+        nextButton = new NextButton(context, mWidth - 120, mHeight - 120, 0.3f);
+        previousButton = new PreviousButton(context, 120, mHeight-120, 0.3f);
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive() {
-        active = true;
-    }
-
-    public void setInactive() {
-        active = false;
-    }
-
-    public void draw(Canvas canvas) {
-        Rect dstRect = new Rect();
-        canvas.getClipBounds(dstRect);
-        canvas.drawBitmap(bitmap, null, dstRect, null);
+    public void drawScene(Canvas canvas) {
+        String text;
+        background = new Background(bitmap);
+        background.draw(canvas);
         resumeButton.draw(canvas);
-
+        //Draw different text for every stage
         switch (sceneManager.getCurrentGameStage()) {
             case 0:
-
+                lastPage = 1;
+                switch (currentPage) {
+                    case 0:
+                        text = context.getResources().getString(R.string.Stage1);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 1:
+                        text = context.getResources().getString(R.string.Stage1_1);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                }
                 break;
 
             case 1:
-                String text = context.getResources().getString(R.string.Stage2);
-                bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                lastPage = 5;
+                switch (currentPage) {
+                    case 0:
+                        text = context.getResources().getString(R.string.Stage2);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 1:
+                        text = context.getResources().getString(R.string.Stage2_1);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 2:
+                        text = context.getResources().getString(R.string.Stage2_2);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 3:
+                        text = context.getResources().getString(R.string.Stage2_3);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 4:
+                        text = context.getResources().getString(R.string.Stage2_4);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 5:
+                        text = context.getResources().getString(R.string.Stage2_5);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                }
                 break;
 
             case 2:
-
+                lastPage = 5;
+                switch (currentPage) {
+                    case 0:
+                        text = context.getResources().getString(R.string.Stage3);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 1:
+                        text = context.getResources().getString(R.string.Stage3_1);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 2:
+                        text = context.getResources().getString(R.string.Stage3_2);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 3:
+                        text = context.getResources().getString(R.string.Stage3_3);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 4:
+                        text = context.getResources().getString(R.string.Stage3_4);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                    case 5:
+                        text = context.getResources().getString(R.string.Stage3_5);
+                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
+                        break;
+                }
                 break;
         }
-
+        if (currentPage < lastPage) {
+            nextButton.draw(canvas);
+        }
+        if (currentPage > 0) previousButton.draw(canvas);
     }
+
+    public void update(){};
 
     public void clickEvents(double x, double y) {
         if (Sprite.isClicked(resumeButton, x, y)) {
+            currentPage = 0;
             sceneManager.drawGameScene();
         }
-    }
-    public Bitmap drawMultilineTextToBitmap(Context gContext,
-                                            int gResId,
-                                            String gText) {
-
-        // prepare canvas
-        Resources resources = gContext.getResources();
-        float scale = resources.getDisplayMetrics().density;
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, gResId);
-
-        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
-        // set default bitmap config if none
-        if(bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        if (Sprite.isClicked(nextButton, x, y) && currentPage < lastPage) {
+            currentPage++;
         }
-        // resource bitmaps are imutable,
-        // so we need to convert it to mutable one
-        bitmap = bitmap.copy(bitmapConfig, true);
-
-        Canvas canvas = new Canvas(bitmap);
-
-        // new antialiased Paint
-        TextPaint paint=new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        // text color - #3D3D3D
-        paint.setColor(Color.rgb(255,255,255));
-        // text size in pixels
-        paint.setTextSize((int) (30 * scale));
-        // text shadow
-        paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
-
-        // set text width to canvas width minus 16dp padding
-        int textWidth = canvas.getWidth() - (int) (16 * scale);
-
-        // init StaticLayout for text
-        StaticLayout textLayout = new StaticLayout(
-                gText, paint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-        // get height of multiline text
-        int textHeight = textLayout.getHeight();
-
-        // get position of text's top left corner
-        float x = (bitmap.getWidth() - textWidth)/2;
-        float y = (bitmap.getHeight() - textHeight)/2;
-
-        // draw text to the Canvas center
-        canvas.save();
-        canvas.translate(x, y);
-        textLayout.draw(canvas);
-        canvas.restore();
-
-        return bitmap;
+        if (Sprite.isClicked(previousButton, x, y) && currentPage > 0) {
+            currentPage--;
+        }
     }
+
 
 }

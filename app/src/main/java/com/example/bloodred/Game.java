@@ -1,37 +1,12 @@
 package com.example.bloodred;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.bloodred.gamebackground.Background;
-import com.example.bloodred.gameobject.BloodBag;
-import com.example.bloodred.gameobject.BloodRack;
-import com.example.bloodred.gameobject.CircleCollider;
-import com.example.bloodred.gameobject.Collider;
-import com.example.bloodred.gamepanel.BloodGroupButton;
-import com.example.bloodred.gamepanel.BloodType;
-import com.example.bloodred.gamepanel.InfoButton;
-import com.example.bloodred.gamepanel.MenuButton;
-import com.example.bloodred.gamepanel.NextButton;
-import com.example.bloodred.gameobject.Patient;
 import com.example.bloodred.gamepanel.Performance;
-import com.example.bloodred.gamepanel.RhButton;
-import com.example.bloodred.gameobject.Sprite;
-import com.example.bloodred.gameobject.Syringe;
-import com.example.bloodred.gameobject.TestTube;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
-import static java.util.Collections.swap;
-
 
 
 /**

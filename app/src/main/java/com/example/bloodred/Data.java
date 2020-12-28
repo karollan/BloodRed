@@ -61,5 +61,17 @@ public class Data {
                 }
         }
 
+        public enum TestTubeTypes {
+                A,
+                B,
+                RhPlus;
+
+                private static final TestTubeTypes[] types = values();
+
+                public static TestTubeTypes getTestTubeTypeType(int index) {return types[index];}
+
+                public static int getTestTubeTypeLength() {return types.length;}
+        }
+
 }
 

@@ -1,16 +1,17 @@
 package com.example.bloodred;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 
-import com.example.bloodred.gameobject.Sprite;
+/**
+ * Syringe is an object that is interactive and directly moved by a player.
+ * Syringe class in an extension of a Sprite, which is an extension of GameObject
+ **/
 
-public class Syringe2 extends SpriteSheet {
+public class Syringe extends SpriteSheet {
 
-    public Syringe2(Context context,  int positionX, int positionY, int fps, int frameCount) {
-        super(BitmapFactory.decodeResource(context.getResources(), R.drawable.syringe_sprite), positionX, positionY, fps, frameCount, 0.8f, 30, Data.ColliderPosition.BOTTOM_LEFT);
+    public Syringe(Context context,  int positionX, int positionY, int fps, int frameCount, int numberOfPauses, boolean alwaysOn) {
+        super(BitmapFactory.decodeResource(context.getResources(), R.drawable.syringe_sprite), positionX, positionY, fps, frameCount, 0.8f, numberOfPauses, alwaysOn, 30, Data.ColliderPosition.BOTTOM_LEFT);
     }
 
     public void update() {

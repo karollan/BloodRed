@@ -21,6 +21,10 @@ public class BloodType {
         return this.rhType;
     }
 
+    public String getRhTypeString() {
+        return this.rhType.toString().contains("plus") ? "Rh+" : "Rh-";
+    }
+
     public static int numberOfPossibleDonors(BloodType recipient) {
         if (recipient.rhType == Data.Rh.RhPlus) {
             if (recipient.bloodGroup == Data.BloodGroups.AB) {

@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 public class SceneManager {
-    private final GameOverScene gameOverScene;
+    private GameOverScene gameOverScene;
     private MenuScene menuScene;
     protected final int mWidth;
     protected final int mHeight;
@@ -128,5 +128,7 @@ public class SceneManager {
         menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
         gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this);
         infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
+        gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
+        gameScene.setActive();
     }
 }

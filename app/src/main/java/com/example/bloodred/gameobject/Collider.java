@@ -3,6 +3,9 @@ package com.example.bloodred.gameobject;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
+
+import com.example.bloodred.Data;
 
 /**
  * Collider is an abstract class which is the foundation of all colliders in the game
@@ -61,6 +64,68 @@ public abstract class Collider extends GameObject {
     public void setPosition(double positionX, double positionY) {
         this.positionX = positionX + colliderPosX;
         this.positionY = positionY + colliderPosY;
+    }
+
+    //ColliderPos function checks what position is needed through checking enum and returns vector with x and y
+    public static PointF colliderPos(Data.ColliderPosition pos, float width, float height) {
+        PointF position = new PointF();
+
+        switch (pos) {
+            case TOP:
+                position.set(0f, -height/2);
+                return position;
+            case BOTTOM:
+                position.set(0f, height/2);
+                return position;
+            case LEFT:
+                position.set(-width/2, 0f);
+                return position;
+            case RIGHT:
+                position.set(width/2, 0f);
+                return position;
+            case CENTER:
+                return position;
+            case TOP_RIGHT:
+                position.set(width/2, -height/2);
+                return position;
+            case TOP_LEFT:
+                position.set(-width/2, -height/2);
+                return position;
+            case BOTTOM_LEFT:
+                position.set(-width/2, height/2);
+                return position;
+            case BOTTOM_RIGHT:
+                position.set(width/2, height/2);
+                return position;
+            case CENTER_RIGHT:
+                position.set(width/4, 0f);
+                return position;
+            case CENTER_LEFT:
+                position.set(-width/4, 0f);
+                return position;
+            case CENTER_TOP:
+                position.set(0f, -height/4);
+                return position;
+            case CENTER_BOTTOM:
+                position.set(0f, height/4);
+                return position;
+            case CENTER_TOP_LEFT:
+                position.set(-width/4, -height/4);
+                return position;
+            case CENTER_TOP_RIGHT:
+                position.set(width/4, -height/4);
+                return position;
+            case CENTER_BOTTOM_LEFT:
+                position.set(-width/4, height/4);
+                return position;
+            case CENTER_BOTTOM_RIGHT:
+                position.set(width/4, height/4);
+                return position;
+            default:
+                position.set(0f, 0f);
+                return position;
+
+        }
     }
 
 }

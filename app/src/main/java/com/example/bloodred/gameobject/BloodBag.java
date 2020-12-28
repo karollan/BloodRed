@@ -20,12 +20,25 @@ public class BloodBag extends Sprite {
             R.drawable.bb0rhminus
     };
 
+    public static int[] bloodBagUsed = {
+            R.drawable.bbarhplusused,
+            R.drawable.bbarhminusused,
+            R.drawable.bbbrhplusused,
+            R.drawable.bbbrhminusused,
+            R.drawable.bbabrhplusused,
+            R.drawable.bbabrhminusused,
+            R.drawable.bb0rhplusused,
+            R.drawable.bb0rhminusused
+    };
+    private final int drawing;
+
     private double originalPositionX;
     private double originalPositionY;
     private boolean active = false;
 
     private BloodType bloodType;
     private boolean doNotDraw = false;
+    private boolean isMovable = true;
 
     public BloodBag(Context context, int drawing, double positionX, double positionY, float scaleFactor) {
         super(context, drawing, positionX, positionY, scaleFactor,
@@ -33,11 +46,14 @@ public class BloodBag extends Sprite {
                 Sprite.checkScaledDrawableHeight(context, drawing, scaleFactor) * 0.5,
                 Data.ColliderPosition.CENTER
                 );
+
         this.originalPositionX = positionX;
         this.originalPositionY = positionY;
+        this.drawing = drawing;
 
         decideBloodType(drawing);
     }
+
     public void update() {
     }
 
@@ -112,5 +128,24 @@ public class BloodBag extends Sprite {
 
     public double getOriginalPositionY() {
         return originalPositionY;
+    }
+
+    public int getDrawingIndex() {
+        int drawingIndex = -1;
+        for(int i = 0; i < bloodBag.length; i++) {
+            if (bloodBag[i] == drawing) {
+                drawingIndex = bloodBagUsed[i];
+            }
+        }
+
+        return drawingIndex;
+    }
+
+    public boolean isMovable() {
+        return isMovable;
+    }
+    public void setMovable(int move) {
+        if (move == 0) isMovable = false;
+        else if (move == 1) isMovable = true;
     }
 }

@@ -16,8 +16,8 @@ public class GameOverScene extends ScenePrototype {
     public GameOverScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager) {
         super(res, context, mWidth, mHeight, sceneManager);
 
-        restartButton = new RestartButton(context, mWidth/2, mHeight/2, 0.4f);
-        exitButton = new ExitButton(context, mWidth/2, mHeight/2, 0.4f);
+        restartButton = new RestartButton(context, mWidth/2 - 150,mHeight/2 + 150, 0.4f);
+        exitButton = new ExitButton(context, mWidth/2 + 150, mHeight/2 + 150, 0.4f);
 
     }
 

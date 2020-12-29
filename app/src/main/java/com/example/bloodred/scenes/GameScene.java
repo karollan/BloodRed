@@ -1,22 +1,30 @@
-package com.example.bloodred;
+package com.example.bloodred.scenes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import com.example.bloodred.Data;
+import com.example.bloodred.FXPlayer;
+import com.example.bloodred.R;
+import com.example.bloodred.Score;
 import com.example.bloodred.gameobject.BloodBag;
 import com.example.bloodred.gameobject.BloodRack;
 import com.example.bloodred.gameobject.Collider;
 import com.example.bloodred.gameobject.Patient;
 import com.example.bloodred.gameobject.Sprite;
+import com.example.bloodred.gameobject.SpriteSheet;
+import com.example.bloodred.gameobject.Syringe;
 import com.example.bloodred.gameobject.TestTube;
 import com.example.bloodred.gamepanel.BloodGroupButton;
 import com.example.bloodred.gamepanel.BloodType;
+import com.example.bloodred.gameobject.ChoiceMessage;
 import com.example.bloodred.gamepanel.InfoButton;
 import com.example.bloodred.gamepanel.MenuButton;
 import com.example.bloodred.gamepanel.NextButton;
 import com.example.bloodred.gamepanel.RhButton;
+import com.example.bloodred.gamepanel.StatusText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -356,6 +364,10 @@ public class GameScene extends ScenePrototype{
                         bag.collider.setInactive();
                         choiceMessage = new ChoiceMessage(true, context, mWidth, mHeight);
                         isChoiceMessageClosed = false;
+
+                        fxPlayer.playGoodAnswerSound();
+                        fxPlayer.playBloodDropSound();
+
                         numberOfDonors--;
                         Log.d("Number of donors", String.valueOf(numberOfDonors));
                     } else {
@@ -365,6 +377,9 @@ public class GameScene extends ScenePrototype{
                         bag.setOriginalPosition();
                         choiceMessage = new ChoiceMessage(false, context, mWidth, mHeight);
                         isChoiceMessageClosed = false;
+
+                        fxPlayer.playWrongAnswerSound();
+
                         numberOfMistakes++;
                         Log.d("Number of mistakes", String.valueOf(numberOfMistakes));
                     }
@@ -499,10 +514,12 @@ public class GameScene extends ScenePrototype{
                     Log.d("DOBRY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                     choiceMessage = new ChoiceMessage(true, context, mWidth, mHeight);
                     isChoiceMessageClosed = false;
+                    fxPlayer.playGoodAnswerSound();
                     stageCleared = true;
                 } else {
                     choiceMessage = new ChoiceMessage(false, context, mWidth, mHeight);
                     isChoiceMessageClosed = false;
+                    fxPlayer.playWrongAnswerSound();
                     if (mistakeMade) secondMistake = true;
                     mistakeMade = true;
                     Log.d("ZLY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());

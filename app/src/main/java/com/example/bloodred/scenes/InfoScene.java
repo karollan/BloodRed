@@ -1,23 +1,15 @@
-package com.example.bloodred;
+package com.example.bloodred.scenes;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.util.Log;
 
-import androidx.core.content.ContextCompat;
-
+import com.example.bloodred.FXPlayer;
+import com.example.bloodred.R;
 import com.example.bloodred.gamebackground.Background;
 import com.example.bloodred.gameobject.Sprite;
 import com.example.bloodred.gamepanel.NextButton;
+import com.example.bloodred.gamepanel.PreviousButton;
 import com.example.bloodred.gamepanel.ResumeButton;
 
 
@@ -34,7 +26,7 @@ public class InfoScene extends ScenePrototype{
     public InfoScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager, FXPlayer fxPlayer) {
         super(res, context, mWidth, mHeight, sceneManager);
 
-        resumeButton = new ResumeButton(context, mWidth/2,  mHeight - 120, 0.3f);
+        resumeButton = new ResumeButton(context, mWidth/2,  mHeight - 120, 0.15f);
         nextButton = new NextButton(context, mWidth - 120, mHeight - 120, 0.3f);
         previousButton = new PreviousButton(context, 120, mHeight-120, 0.3f);
 

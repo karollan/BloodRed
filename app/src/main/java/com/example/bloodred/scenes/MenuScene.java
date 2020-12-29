@@ -1,15 +1,16 @@
-package com.example.bloodred;
+package com.example.bloodred.scenes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 
-import com.example.bloodred.gamebackground.Background;
+import com.example.bloodred.FXPlayer;
+import com.example.bloodred.R;
 import com.example.bloodred.gameobject.Sprite;
 import com.example.bloodred.gamepanel.ExitButton;
 import com.example.bloodred.gamepanel.RestartButton;
 import com.example.bloodred.gamepanel.ResumeButton;
+import com.example.bloodred.gamepanel.SoundButton;
 
 public class MenuScene extends ScenePrototype {
 
@@ -17,12 +18,14 @@ public class MenuScene extends ScenePrototype {
     private final ResumeButton resumeButton;
     private final RestartButton restartButton;
     private final ExitButton exitButton;
+    private final SoundButton soundButton;
 
     public MenuScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager, FXPlayer fxPlayer) {
         super(res, context, mWidth, mHeight, sceneManager);
-        resumeButton = new ResumeButton(context, mWidth-200, 200, 0.3f);
+        resumeButton = new ResumeButton(context, mWidth/2+300, mHeight/2, 0.15f);
         restartButton = new RestartButton(context, mWidth/2, mHeight/2, 0.4f);
-        exitButton = new ExitButton(context, mWidth/3, mHeight/2, 0.4f);
+        exitButton = new ExitButton(context, mWidth/3, mHeight/2, 0.6f);
+        soundButton = new SoundButton(context, 200, mHeight - 200, 0.3f);
         this.fxPlayer = fxPlayer;
     }
 
@@ -31,6 +34,7 @@ public class MenuScene extends ScenePrototype {
         resumeButton.draw(canvas);
         restartButton.draw(canvas);
         exitButton.draw(canvas);
+        soundButton.draw(canvas);
     }
 
     public void update(){}
@@ -50,6 +54,12 @@ public class MenuScene extends ScenePrototype {
         if (Sprite.isClicked(exitButton, x, y)) {
             fxPlayer.playButtonClickSound();
             android.os.Process.killProcess(android.os.Process.myPid());
+        }
+
+        if (Sprite.isClicked(soundButton, x, y)) {
+            soundButton.changeState();
+            soundButton.changeTexture(soundButton.getState() ? R.drawable.soundoff : R.drawable.sound, context, 0.3f);
+            fxPlayer.changeState(soundButton.getState());
         }
 
     }

@@ -18,15 +18,17 @@ public abstract class Collider extends GameObject {
 
     private final double colliderPosX;
     private final double colliderPosY;
+    private final boolean drawable;
     protected Paint paint;
 
     private boolean active = true;
 
-    public Collider(double positionX, double positionY, double colliderPosX, double colliderPosY) {
+    public Collider(double positionX, double positionY, double colliderPosX, double colliderPosY, boolean drawable) {
         super(positionX, positionY);
 
         this.colliderPosX = colliderPosX;
         this.colliderPosY = colliderPosY;
+        this.drawable = drawable;
 
         this.paint = new Paint();
         paint.setColor(Color.RED);
@@ -134,4 +136,7 @@ public abstract class Collider extends GameObject {
         }
     }
 
+    public boolean setToDraw() {
+        return this.drawable;
+    }
 }

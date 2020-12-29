@@ -1,7 +1,9 @@
-package com.example.bloodred;
+package com.example.bloodred.gameobject;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+
+import com.example.bloodred.R;
 
 public class ScoreStar extends SpriteSheet {
 

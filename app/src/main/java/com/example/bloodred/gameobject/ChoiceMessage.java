@@ -1,7 +1,8 @@
-package com.example.bloodred;
+package com.example.bloodred.gameobject;
 
 import android.content.Context;
 
+import com.example.bloodred.R;
 import com.example.bloodred.gameobject.Sprite;
 
 public class ChoiceMessage extends Sprite {

@@ -14,11 +14,18 @@ public class FXPlayer {
     private static int waterDropSound;
     private static int buttonClickSound;
     private static int nextStageSound;
-    private int delay;
+    private static int goodAnswerSound;
+    private static int wrongAnswerSound;
+    private static int bloodDropSound;
+    private final Context context;
 
     public FXPlayer(Context context) {
-        soundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0);
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        this.context = context;
+        loadSounds();
+    }
 
+    private void loadSounds() {
         syringeSuckSound = soundPool.load(context, R.raw.syringesuckbloodshort, 1);
         syringeDropSound = soundPool.load(context, R.raw.syrignedroplet, 1);
         goldStarSound = soundPool.load(context, R.raw.goldstar, 1);
@@ -26,12 +33,9 @@ public class FXPlayer {
         waterDropSound = soundPool.load(context, R.raw.waterdrop, 1);
         buttonClickSound = soundPool.load(context, R.raw.buttonclick, 1);
         nextStageSound = soundPool.load(context, R.raw.nextstagebutton, 1);
-
-        this.delay = 0;
-    }
-
-    public void setDelay(int delay) {
-        this.delay = delay;
+        goodAnswerSound = soundPool.load(context, R.raw.goodanswer, 1);
+        wrongAnswerSound = soundPool.load(context, R.raw.wronganswer, 1);
+        bloodDropSound = soundPool.load(context, R.raw.blooddropsound, 1);
     }
 
     //	play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
@@ -64,4 +68,25 @@ public class FXPlayer {
         soundPool.play(nextStageSound, 1f, 1f, 1, 0, 1f);
     }
 
+    public void playGoodAnswerSound() {
+        soundPool.play(goodAnswerSound, 1f, 1f, 1, 0, 1f);
+    }
+
+    public void playWrongAnswerSound() {
+        soundPool.play(wrongAnswerSound, 1f, 1f, 1, 0, 1f);
+    }
+
+    public void playBloodDropSound() {
+        soundPool.play(bloodDropSound, 1f, 1f, 1, 0, 1f);
+    }
+
+
+    public void changeState(boolean state) {
+        if (state) {
+            soundPool.release();
+        } else {
+            soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+            loadSounds();
+        }
+    }
 }

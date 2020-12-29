@@ -14,8 +14,8 @@ public class RectangleCollider extends Collider {
     protected double width;
     protected double height;
 
-    public RectangleCollider(double positionX, double positionY, double colliderPosX, double colliderPosY, double width, double height) {
-        super(positionX, positionY, colliderPosX, colliderPosY);
+    public RectangleCollider(double positionX, double positionY, double colliderPosX, double colliderPosY, double width, double height, boolean drawable) {
+        super(positionX, positionY, colliderPosX, colliderPosY, drawable);
 
         this.width = width;
         this.height = height;
@@ -23,7 +23,7 @@ public class RectangleCollider extends Collider {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawRect((float)(positionX - width/2), (float)(positionY - height/2), (float)(positionX + width/2), (float)(positionY + width/2), paint);
+        canvas.drawRect((float)(positionX - width/2), (float)(positionY - height/2), (float)(positionX + height/2), (float)(positionY + width/2), paint);
     }
 
     protected double getWidth() {

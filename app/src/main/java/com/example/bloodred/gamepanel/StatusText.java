@@ -1,14 +1,14 @@
-package com.example.bloodred;
+package com.example.bloodred.gamepanel;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import androidx.core.content.ContextCompat;
-
+import com.example.bloodred.scenes.GameOverScene;
+import com.example.bloodred.scenes.GameScene;
+import com.example.bloodred.scenes.ScenePrototype;
+import com.example.bloodred.Score;
 import com.example.bloodred.gameobject.TestTube;
-import com.example.bloodred.gamepanel.BloodType;
 
 import java.util.List;
 

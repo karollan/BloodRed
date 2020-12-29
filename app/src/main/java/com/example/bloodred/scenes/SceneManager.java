@@ -1,13 +1,13 @@
-package com.example.bloodred;
+package com.example.bloodred.scenes;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.media.MediaPlayer;
 import android.util.Log;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import com.example.bloodred.FXPlayer;
+import com.example.bloodred.R;
+import com.example.bloodred.Score;
 
 
 public class SceneManager {

@@ -15,7 +15,7 @@ import com.example.bloodred.R;
 public class Patient extends Sprite{
 
     public Patient(Context context, double positionX, double positionY, float scaleFactor) {
-        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, Data.ColliderPosition.CENTER_LEFT);
+        super(context, R.drawable.patient, positionX, positionY, scaleFactor, 60, Data.ColliderPosition.CENTER_LEFT, true);
     }
 
     public void update() {

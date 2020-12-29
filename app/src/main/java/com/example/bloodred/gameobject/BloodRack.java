@@ -17,7 +17,7 @@ public class BloodRack extends Sprite {
         super(context, R.drawable.rack, positionX, positionY, scaleFactor,
                 Sprite.checkScaledDrawableWidth(context, R.drawable.rack, scaleFactor)/2,
                 Sprite.checkScaledDrawableHeight(context, R.drawable.rack, scaleFactor)/4,
-                Data.ColliderPosition.CENTER_TOP_RIGHT);
+                Data.ColliderPosition.CENTER_TOP_RIGHT, true);
     }
 
     public void update() {

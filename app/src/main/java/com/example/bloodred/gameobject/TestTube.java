@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 
 import com.example.bloodred.Data;
 import com.example.bloodred.R;
-import com.example.bloodred.SpriteSheet;
 import com.example.bloodred.gamepanel.BloodType;
 
 /**
@@ -22,7 +21,7 @@ public class TestTube extends SpriteSheet {
     public TestTube(Data.TestTubeTypes testTubeType, BloodType bloodType, Context context, int positionX, int positionY, int fps, int frameCount, int numberOfPauses, boolean alwaysOn) {
         super(
                 (bloodType.getBloodGroup().toString().contains(testTubeType.toString()) || testTubeType.toString().equals(bloodType.getRhType().toString())) ? BitmapFactory.decodeResource(context.getResources(), R.drawable.testtubesprite_second) : BitmapFactory.decodeResource(context.getResources(), R.drawable.testtubesprite_first),
-                positionX, positionY, fps, frameCount, 0.7f, numberOfPauses, alwaysOn, 30, Data.ColliderPosition.TOP);
+                positionX, positionY, fps, frameCount, 0.7f, numberOfPauses, alwaysOn, 30, Data.ColliderPosition.TOP, true);
 
         this.testTubeType = testTubeType;
     }

@@ -44,7 +44,7 @@ public class BloodBag extends Sprite {
         super(context, drawing, positionX, positionY, scaleFactor,
                 Sprite.checkScaledDrawableWidth(context, drawing, scaleFactor) * 0.5,
                 Sprite.checkScaledDrawableHeight(context, drawing, scaleFactor) * 0.5,
-                Data.ColliderPosition.CENTER
+                Data.ColliderPosition.CENTER, false
                 );
 
         this.originalPositionX = positionX;

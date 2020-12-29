@@ -14,8 +14,8 @@ public class CircleCollider extends Collider {
 
     protected double radius;
 
-    public CircleCollider(double positionX, double positionY, double radius, double colliderPosX, double colliderPosY) {
-        super(positionX, positionY, colliderPosX, colliderPosY);
+    public CircleCollider(double positionX, double positionY, double radius, double colliderPosX, double colliderPosY, boolean drawable) {
+        super(positionX, positionY, colliderPosX, colliderPosY, drawable);
         this.radius = radius;
 
     }

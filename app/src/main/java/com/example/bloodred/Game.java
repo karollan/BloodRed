@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.bloodred.gamepanel.Performance;
+import com.example.bloodred.scenes.SceneManager;
 
 
 /**

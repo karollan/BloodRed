@@ -46,7 +46,7 @@ public abstract class Sprite extends GameObject {
      **/
 
     //Contructor for Sprites with CircleCollider
-    public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor, float radius, Data.ColliderPosition pos) {
+    public Sprite(Context context, int drawing, double positionX, double positionY, float scaleFactor, float radius, Data.ColliderPosition pos, boolean drawable) {
         //Call the basic constructor
         this(context, drawing, positionX, positionY, scaleFactor);
 
@@ -54,27 +54,30 @@ public abstract class Sprite extends GameObject {
         this.colliderPositionRelativeToSprite = pos;
         PointF position = Collider.colliderPos(this.colliderPositionRelativeToSprite, this.width, this.height);
 
-        collider = new CircleCollider(positionX, positionY, radius, position.x, position.y);
+        collider = new CircleCollider(positionX, positionY, radius, position.x, position.y, drawable);
     }
 
     //Constructor for Sprites with RectangleCollider
-    public Sprite (Context context, int drawing, double positionX, double positionY, float scaleFactor, double width, double height,  Data.ColliderPosition pos) {
+    public Sprite (Context context, int drawing, double positionX, double positionY, float scaleFactor, double width, double height,  Data.ColliderPosition pos, boolean drawable) {
         //Call the basic constructor
         this(context, drawing, positionX, positionY, scaleFactor);
 
         //Set the collider
         this.colliderPositionRelativeToSprite = pos;
         PointF position = Collider.colliderPos(this.colliderPositionRelativeToSprite, this.width, this.height);
-        collider = new RectangleCollider(positionX, positionY, position.x, position.y, width, height);
+        collider = new RectangleCollider(positionX, positionY, position.x, position.y, width, height, drawable);
     }
 
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bmp, (float) positionX - width / 2, (float) positionY - height / 2, null);
         if (collider != null) {
             collider.setPosition(positionX, positionY);
-            collider.draw(canvas);
+            if (collider.setToDraw()) {
+                collider.draw(canvas);
+            }
         }
     }
+
 
     public float getWidth() {
         return width;

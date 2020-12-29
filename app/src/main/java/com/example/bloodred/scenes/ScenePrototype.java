@@ -1,4 +1,4 @@
-package com.example.bloodred;
+package com.example.bloodred.scenes;
 
 import android.content.Context;
 import android.content.res.Resources;

@@ -1,4 +1,4 @@
-package com.example.bloodred;
+package com.example.bloodred.gameobject;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -6,9 +6,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.Log;
 
-import com.example.bloodred.gameobject.CircleCollider;
-import com.example.bloodred.gameobject.Collider;
-import com.example.bloodred.gameobject.GameObject;
+import com.example.bloodred.Data;
 
 public class SpriteSheet extends GameObject {
 
@@ -60,12 +58,12 @@ public class SpriteSheet extends GameObject {
     }
 
     //Spritesheet Constructor with CircleCollider
-    public SpriteSheet(Bitmap bitmap, int x, int y, int fps, int frameCount, float scaleFactor, int numberOfPauses, boolean alwaysOn, float radius, Data.ColliderPosition pos) {
+    public SpriteSheet(Bitmap bitmap, int x, int y, int fps, int frameCount, float scaleFactor, int numberOfPauses, boolean alwaysOn, float radius, Data.ColliderPosition pos, boolean drawable) {
         this(bitmap, x, y, fps, frameCount, scaleFactor, numberOfPauses, alwaysOn);
 
         this.colliderPositionRelativeToSprite = pos;
         PointF position = Collider.colliderPos(this.colliderPositionRelativeToSprite, spriteWidth, spriteHeight);
-        collider = new CircleCollider(positionX, positionY, radius, position.x, position.y);
+        collider = new CircleCollider(positionX, positionY, radius, position.x, position.y, drawable);
     }
 
     public static boolean isClicked(SpriteSheet spriteSheet, double x, double y) {
@@ -179,13 +177,15 @@ public class SpriteSheet extends GameObject {
         this.sourceRect.left = currentFrame * spriteWidth;
         this.sourceRect.right = this.sourceRect.left + spriteWidth;
 
-        collider.setPosition(positionX, positionY);
+        if (collider != null) {
+            collider.setPosition(positionX, positionY);
+        }
     }
 
     // the draw method which draws the corresponding frame
     public void draw(Canvas canvas) {
         // where to draw the sprite
-        if (collider != null) {
+        if (collider != null && collider.setToDraw()) {
             //collider.draw(canvas);
         }
 

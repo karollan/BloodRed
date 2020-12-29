@@ -1,19 +1,19 @@
-package com.example.bloodred;
+package com.example.bloodred.scenes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
 
+import com.example.bloodred.FXPlayer;
+import com.example.bloodred.Score;
 import com.example.bloodred.gamebackground.Background;
+import com.example.bloodred.gameobject.ScoreStar;
 import com.example.bloodred.gameobject.Sprite;
-import com.example.bloodred.gameobject.TestTube;
 import com.example.bloodred.gamepanel.ExitButton;
 import com.example.bloodred.gamepanel.RestartButton;
+import com.example.bloodred.gamepanel.StatusText;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class GameOverScene extends ScenePrototype {
@@ -35,11 +35,11 @@ public class GameOverScene extends ScenePrototype {
         super(res, context, mWidth, mHeight, sceneManager);
 
         restartButton = new RestartButton(context, (float)mWidth/2 - 200,mHeight - 150, 0.4f);
-        exitButton = new ExitButton(context, (float)mWidth/2 + 200, mHeight - 150, 0.4f);
+        exitButton = new ExitButton(context, (float)mWidth/2 + 200, mHeight - 150, 0.6f);
         statusText = new StatusText(mWidth, mHeight, this);
 
         this.scoreStarY = sceneManager.getmHeight()/4;
-        this.firstScoreStarX = sceneManager.getmWidth()/2 - (int)(res.getWidth()/10*2.5) + spaceBetweenStars*Score.getStarAmount();
+        this.firstScoreStarX = sceneManager.getmWidth()/2 - (int)(res.getWidth()/10*2.5) + spaceBetweenStars* Score.getStarAmount();
         this.fxPlayer = fxPlayer;
     }
 
@@ -87,7 +87,7 @@ public class GameOverScene extends ScenePrototype {
                         }
                     };
                 }
-                star.playSoundInAnimation(r, 10);
+                star.playSoundInAnimation(r, 6);
 
                 //STAR ANIMATIONS
                 if (star.getCurrentFrame() == 0) {

@@ -18,6 +18,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final SceneManager sceneManager;
     private GameLoop gameLoop;
 
+
     //User screen size
     private int mWidth = this.getResources().getDisplayMetrics().widthPixels;
     private int mHeight = this.getResources().getDisplayMetrics().heightPixels;

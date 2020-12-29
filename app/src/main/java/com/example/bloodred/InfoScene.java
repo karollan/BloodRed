@@ -24,19 +24,21 @@ import com.example.bloodred.gamepanel.ResumeButton;
 public class InfoScene extends ScenePrototype{
 
 
-    //private final SceneManager sceneManager;
+    private final FXPlayer fxPlayer;
     private final NextButton nextButton;
     private final PreviousButton previousButton;
     private final ResumeButton resumeButton;
     private int currentPage = 0;
     private int lastPage;
 
-    public InfoScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager) {
+    public InfoScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager, FXPlayer fxPlayer) {
         super(res, context, mWidth, mHeight, sceneManager);
 
         resumeButton = new ResumeButton(context, mWidth/2,  mHeight - 120, 0.3f);
         nextButton = new NextButton(context, mWidth - 120, mHeight - 120, 0.3f);
         previousButton = new PreviousButton(context, 120, mHeight-120, 0.3f);
+
+        this.fxPlayer = fxPlayer;
     }
 
     public void drawScene(Canvas canvas) {
@@ -131,12 +133,15 @@ public class InfoScene extends ScenePrototype{
     public void clickEvents(double x, double y) {
         if (Sprite.isClicked(resumeButton, x, y)) {
             currentPage = 0;
+            fxPlayer.playButtonClickSound();
             sceneManager.drawGameScene();
         }
         if (Sprite.isClicked(nextButton, x, y) && currentPage < lastPage) {
+            fxPlayer.playButtonClickSound();
             currentPage++;
         }
         if (Sprite.isClicked(previousButton, x, y) && currentPage > 0) {
+            fxPlayer.playButtonClickSound();
             currentPage--;
         }
     }

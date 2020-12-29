@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.example.bloodred.gameobject.CircleCollider;
 import com.example.bloodred.gameobject.Collider;
@@ -20,24 +21,28 @@ public class SpriteSheet extends GameObject {
     private long frameTicker;	// the time of the last frame update
     private int framePeriod;	// milliseconds between each frame (1000/fps)
     private int delay;
-    private int animationTime;
+    private final int animationTime;
 
     private int spriteWidth;	// the width of the sprite to calculate the cut out rectangle
     private int spriteHeight;	// the height of the sprite
 
-    private int numberOfPauses;
+    private final int numberOfPauses;
     private int stopFrameNumber;
-    private int framesPerAnimation;
+    private final int framesPerAnimation;
     private int stopCounter;
 
     private boolean animation;
 
+    //Sound in animation
+    private Runnable r;
+    private int soundAtFrameNr;
+    private boolean soundInAnimation;
 
 
     //SpriteSheet Contructor
     public SpriteSheet(Bitmap bitmap, int x, int y, int fps, int frameCount, float scaleFactor, int numberOfPauses, boolean alwaysOn) {
         super(x, y);
-        this.bitmap = bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * scaleFactor), (int) (bitmap.getHeight() * scaleFactor), true);
+        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * scaleFactor), (int) (bitmap.getHeight() * scaleFactor), true);
         this.numberOfPauses = numberOfPauses;
         this.stopCounter = numberOfPauses;
         this.animation = alwaysOn;
@@ -64,7 +69,7 @@ public class SpriteSheet extends GameObject {
     }
 
     public static boolean isClicked(SpriteSheet spriteSheet, double x, double y) {
-        return x >= (spriteSheet.getPositionX() - spriteSheet.getSpriteWidth()/2) && x < (spriteSheet.getPositionX() + spriteSheet.getSpriteWidth()/2) && y >= (spriteSheet.getPositionY() - spriteSheet.getSpriteHeight()/2) && y < (spriteSheet.getPositionY() + spriteSheet.getSpriteHeight()/2);
+        return x >= (spriteSheet.getPositionX() - (float)spriteSheet.getSpriteWidth()/2) && x < (spriteSheet.getPositionX() + (float)spriteSheet.getSpriteWidth()/2) && y >= (spriteSheet.getPositionY() - (float)spriteSheet.getSpriteHeight()/2) && y < (spriteSheet.getPositionY() + (float)spriteSheet.getSpriteHeight()/2);
     }
 
     public Bitmap getBitmap() {
@@ -114,6 +119,7 @@ public class SpriteSheet extends GameObject {
 
     public void startAnimation() {
         animation = true;
+        Log.d("animuje", "animacje");
     }
 
     public boolean inAnimation() {
@@ -133,6 +139,12 @@ public class SpriteSheet extends GameObject {
         this.delay = delay;
     }
 
+    public void playSoundInAnimation(Runnable r, int soundAtFrameNr) {
+        this.r = r;
+        this.soundAtFrameNr = soundAtFrameNr;
+        this.soundInAnimation = true;
+    }
+
     // the update method for SpriteSheet
     public void update(long gameTime) {
         if (gameTime > frameTicker + framePeriod + delay) {
@@ -141,6 +153,14 @@ public class SpriteSheet extends GameObject {
             if (animation) {
                 delay = 0;
                 currentFrame++;
+
+                //Sound in animation at certain frame
+                if (soundInAnimation) {
+                    if (currentFrame == soundAtFrameNr-1) {
+                        r.run();
+                    }
+                }
+
                 if (currentFrame >= stopFrameNumber) {
                     stopFrameNumber = currentFrame + framesPerAnimation - 1;
                     animation = false;
@@ -158,23 +178,19 @@ public class SpriteSheet extends GameObject {
         // define the rectangle to cut out sprite
         this.sourceRect.left = currentFrame * spriteWidth;
         this.sourceRect.right = this.sourceRect.left + spriteWidth;
+
+        collider.setPosition(positionX, positionY);
     }
 
     // the draw method which draws the corresponding frame
     public void draw(Canvas canvas) {
         // where to draw the sprite
         if (collider != null) {
-            collider.setPosition(positionX, positionY);
-            collider.draw(canvas);
+            //collider.draw(canvas);
         }
 
         Rect destRect = new Rect((int)getPositionX()-spriteWidth/2, (int)getPositionY()-spriteHeight/2, (int)getPositionX() + spriteWidth/2, (int)getPositionY() + spriteHeight/2);
         canvas.drawBitmap(bitmap, sourceRect, destRect, null);
-
-//        canvas.drawBitmap(bitmap, 20, 150, null);
-//        Paint paint = new Paint();
-//        paint.setARGB(50, 0, 255, 0);
-//        canvas.drawRect(20 + (currentFrame * destRect.width()), 150, 20 + (currentFrame * destRect.width()) + destRect.width(), 150 + destRect.height(),  paint);
     }
 
 }

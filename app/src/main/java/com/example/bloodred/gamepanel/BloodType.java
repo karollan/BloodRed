@@ -22,7 +22,7 @@ public class BloodType {
     }
 
     public String getRhTypeString() {
-        return this.rhType.toString().contains("plus") ? "Rh+" : "Rh-";
+        return this.rhType.toString().contains("Plus") ? "Rh+" : "Rh-";
     }
 
     public static int numberOfPossibleDonors(BloodType recipient) {

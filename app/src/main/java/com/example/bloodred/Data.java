@@ -2,6 +2,7 @@ package com.example.bloodred;
 
 import com.example.bloodred.gamepanel.BloodType;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**

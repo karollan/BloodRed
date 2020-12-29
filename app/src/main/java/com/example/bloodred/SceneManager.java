@@ -3,10 +3,15 @@ package com.example.bloodred;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.MediaPlayer;
 import android.util.Log;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class SceneManager {
+    private final FXPlayer fXPlayer;
     private GameOverScene gameOverScene;
     private MenuScene menuScene;
     protected final int mWidth;
@@ -20,10 +25,11 @@ public class SceneManager {
         this.context = context;
         this.mWidth = mWidth;
         this.mHeight = mHeight;
-        menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
-        gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this);
-        infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
-        gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
+        fXPlayer = new FXPlayer(context);
+        infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
+        gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
+        menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
+        gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this, fXPlayer);
         gameScene.setActive();
     }
 
@@ -48,9 +54,9 @@ public class SceneManager {
 
     }
 
+
     //Tymczasowe rozwiązanie
     public void drawInfoScene() {
-        Log.d("klikanie", "aktywnosc");
         infoScene.setActive();
         gameScene.setInactive();
         menuScene.setInactive();
@@ -115,8 +121,14 @@ public class SceneManager {
 
     public void update() {
         gameScene.update();
+        infoScene.update();
+        menuScene.update();
+        gameOverScene.update();
     }
 
+    public int getmWidth() {return mWidth;}
+
+    public int getmHeight() {return mHeight;}
 
     public int getCurrentGameStage() {
         return gameScene.getCurrentStage();
@@ -125,10 +137,11 @@ public class SceneManager {
     public boolean getGameResult() {return gameScene.getGameResult();}
 
     public void restartGame() {
-        menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
-        gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this);
-        infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
-        gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this);
+        menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
+        gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this, fXPlayer);
+        infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
+        gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
         gameScene.setActive();
+        Score.resetScore();
     }
 }

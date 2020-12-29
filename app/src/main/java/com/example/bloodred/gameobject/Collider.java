@@ -2,7 +2,9 @@ package com.example.bloodred.gameobject;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.PathEffect;
 import android.graphics.PointF;
 
 import com.example.bloodred.Data;
@@ -28,6 +30,10 @@ public abstract class Collider extends GameObject {
 
         this.paint = new Paint();
         paint.setColor(Color.RED);
+        PathEffect dashPath = new DashPathEffect(new float[]{0.5f,0.5f},1);
+        paint.setPathEffect(dashPath);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(8.0f);
     }
 
     public abstract void draw(Canvas canvas);

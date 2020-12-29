@@ -31,11 +31,14 @@ public class GameScene extends ScenePrototype{
     private static final int MAX_BLOOD_BAG_AMOUNT = 8;
     private static final int MAX_NUMBER_OF_MISTAKES = 3;
 
+    private final Syringe syringe;
     private final Patient patient;
     private final BloodRack bloodRack;
     private final NextButton nextButton;
     private final MenuButton menuButton;
     private final InfoButton infoButton;
+
+    private final FXPlayer fxPlayer;
 
     //TestTubes
     private final List<TestTube> testTubeList = new ArrayList<TestTube>();
@@ -57,7 +60,7 @@ public class GameScene extends ScenePrototype{
 
     //RhButtons
     private final List<RhButton> RhButtonList = new ArrayList<>();
-    private int GroupButtonWidth;
+    private final int GroupButtonWidth;
     private final int rhButtonShift = 150;
     private final int RhButtonY = BloodGroupButtonY + 200;
 
@@ -87,10 +90,14 @@ public class GameScene extends ScenePrototype{
     private ChoiceMessage choiceMessage;
     private boolean isChoiceMessageClosed = true;
 
-    private final Syringe syringe;
+    private boolean mistakeMade = false;
+    private boolean secondMistake = false;
 
-    public GameScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager) {
+
+    public GameScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager, FXPlayer fxPlayer) {
         super(res, context, mWidth, mHeight, sceneManager);
+
+        this.fxPlayer = fxPlayer;
 
         //Initialize variables values
         firstTestTubeX = mWidth/2 - 200;
@@ -104,7 +111,7 @@ public class GameScene extends ScenePrototype{
         statusText = new StatusText(mWidth, mHeight, this);
 
         // Initialize syringe
-        syringe = new Syringe(context, mWidth/2, mHeight/3, 8, 20, 4, false);
+        syringe = new Syringe(context, mWidth/2, mHeight/3, 12, 20, 4, false);
 
         // Initialize patient
         patient = new Patient(context, mWidth/2, mHeight-150, 1.5f);
@@ -230,6 +237,9 @@ public class GameScene extends ScenePrototype{
                 //Syringe animation begins
                 syringe.startAnimation();
 
+                //Syringe sound
+                fxPlayer.playSyringeSuckSound();
+
                 //Next stage button available
                 stageCleared = true;
             }
@@ -261,10 +271,21 @@ public class GameScene extends ScenePrototype{
 
                     //Start animation on syringe
                     syringe.startAnimation();
+                    fxPlayer.playSyringeDropSound();
 
                     //Start animation on test tube
                     tube.setDelay(syringe.getAnimationTime());
                     tube.startAnimation();
+
+                    //Test tube sound
+                    Runnable r = new Runnable() {
+                        @Override
+                        public void run() {
+                            fxPlayer.playWaterDropSound();
+                        }
+                    };
+                    tube.playSoundInAnimation(r, 6);
+
 
                     Log.d("Syringe and Tube", "Wlano krew!");
                 }
@@ -276,7 +297,7 @@ public class GameScene extends ScenePrototype{
             if (activateTestTube == MAX_TEST_TUBE_AMOUNT) {
 
                 // TYMCZASOWO
-                stageCleared = true;
+                //stageCleared = true;
 
                 //Create BloodGroupButtons
                 if (BloodGroupButtonList.size() < MAX_BLOOD_GROUP_BUTTON_AMOUNT) {
@@ -303,6 +324,10 @@ public class GameScene extends ScenePrototype{
              *
              **/
         } else if (currentStage == 2) {
+            BloodGroupButtonList.clear();
+            RhButtonList.clear();
+            testTubeList.clear();
+
             //Create Blood Bags
             if (bloodBagList.size() < MAX_BLOOD_BAG_AMOUNT) {
                 if (bloodBagList.size() == MAX_BLOOD_BAG_AMOUNT/2) {
@@ -326,6 +351,7 @@ public class GameScene extends ScenePrototype{
                     if (BloodType.checkBloodCompatibility(bag.getBloodType(), bloodType)) {
                         Log.d("Number of donors", String.valueOf(numberOfDonors));
                         Log.d("BloodBag", "Removed");
+                        bag.setPosition(bloodRack.collider.getPositionX() + bag.getWidth()/2, bloodRack.collider.getPositionY() - bag.getHeight()/2);
                         bag.setDoNotDraw();
                         bag.collider.setInactive();
                         choiceMessage = new ChoiceMessage(true, context, mWidth, mHeight);
@@ -350,12 +376,16 @@ public class GameScene extends ScenePrototype{
             //GAME OVER
             if (numberOfMistakes == MAX_NUMBER_OF_MISTAKES) {
                 gameResult = false;
+                Score.addGoldStars(0);
+                Score.setGrantedStars();
                 sceneManager.drawGameOverScene();
             }
 
             //GAME WON
             if (numberOfDonors == 0) {
                 gameResult = true;
+                Score.addGoldStars(MAX_NUMBER_OF_MISTAKES - numberOfMistakes + (mistakeMade ? 0 : 1) + (secondMistake ? 0 : 1));
+                Score.setGrantedStars();
                 sceneManager.drawGameOverScene();
             }
 
@@ -365,11 +395,12 @@ public class GameScene extends ScenePrototype{
     public void clickEvents(double x, double y) {
 
         if (Sprite.isClicked(menuButton, x, y)) {
+            fxPlayer.playButtonClickSound();
             sceneManager.drawMenuScene();
         }
 
         if (Sprite.isClicked(infoButton, x, y)) {
-            Log.d("dziala", "click");
+            fxPlayer.playButtonClickSound();
             sceneManager.drawInfoScene();
             Log.d("klikanie", "aktywnosc");
         }
@@ -427,6 +458,10 @@ public class GameScene extends ScenePrototype{
 
         //Click on nextButton
         if (stageCleared && Sprite.isClicked(nextButton, x, y)) {
+
+            //Next stage sound
+            fxPlayer.playNextStageSound();
+
             //Continue to next stage
             Log.d("Stage cleared", "Następny etap wczytaj");
 
@@ -445,6 +480,9 @@ public class GameScene extends ScenePrototype{
         //Click on one of BloodGroupButtons
         for (BloodGroupButton btn : BloodGroupButtonList) {
             if (Sprite.isClicked(btn, x, y)) {
+
+                fxPlayer.playButtonClickSound();
+
                 RhButtonList.clear();
                 btn.setActive();
                 currentBloodGroup = btn.getBloodGroup();
@@ -454,6 +492,9 @@ public class GameScene extends ScenePrototype{
         //Click on one of RhButtons
         for (RhButton btn : RhButtonList) {
             if (Sprite.isClicked(btn, x, y)) {
+
+                fxPlayer.playButtonClickSound();
+
                 if (currentBloodGroup == bloodType.getBloodGroup() && btn.getRhType() == bloodType.getRhType()) {
                     Log.d("DOBRY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                     choiceMessage = new ChoiceMessage(true, context, mWidth, mHeight);
@@ -462,6 +503,8 @@ public class GameScene extends ScenePrototype{
                 } else {
                     choiceMessage = new ChoiceMessage(false, context, mWidth, mHeight);
                     isChoiceMessageClosed = false;
+                    if (mistakeMade) secondMistake = true;
+                    mistakeMade = true;
                     Log.d("ZLY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                     for (BloodGroupButton BGB : BloodGroupButtonList) {
                         BGB.setInactive();

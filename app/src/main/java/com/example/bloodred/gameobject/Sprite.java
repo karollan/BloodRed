@@ -69,11 +69,11 @@ public abstract class Sprite extends GameObject {
     }
 
     public void draw(Canvas canvas) {
+        canvas.drawBitmap(bmp, (float) positionX - width / 2, (float) positionY - height / 2, null);
         if (collider != null) {
             collider.setPosition(positionX, positionY);
             collider.draw(canvas);
         }
-        canvas.drawBitmap(bmp, (float) positionX - width / 2, (float) positionY - height / 2, null);
     }
 
     public float getWidth() {

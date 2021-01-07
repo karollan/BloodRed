@@ -11,7 +11,10 @@ import com.example.bloodred.Score;
 import com.example.bloodred.gameobject.TestTube;
 
 import java.util.List;
-
+/**
+ * StatusText is a class which purpose is to draw text on canvas
+ * It draws text for every game scene
+ **/
 public class StatusText {
 
     private final int mWidth;
@@ -24,6 +27,7 @@ public class StatusText {
         this.scenePrototype = scene;
     }
 
+    //Draw text depending on the active scene
     public void draw(Canvas canvas) {
 
         if (scenePrototype instanceof GameScene) {
@@ -116,6 +120,7 @@ public class StatusText {
         canvas.drawText( mistakes,  mWidth-300,  mHeight-50, strokePaint);
     }
 
+    //Create paints
     private Paint getFillPaint(float textSize, boolean antiAlias, int color) {
         Paint fillPaint = new Paint();
         fillPaint.setAntiAlias(antiAlias);

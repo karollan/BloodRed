@@ -5,10 +5,16 @@ import android.content.Context;
 import com.example.bloodred.Data;
 import com.example.bloodred.R;
 import com.example.bloodred.gamepanel.BloodType;
+/**
+ * BloodBag is an interactive object which purpose is used during stage 3
+ * It contains its own blood type
+ * BloodBag class in an extension of a Sprite, which is an extension of GameObject
+ **/
 
 
 public class BloodBag extends Sprite {
 
+    //All available textures of still usable blood bag
     public static int[] bloodBag = {
             R.drawable.bbarhplus,
             R.drawable.bbarhminus,
@@ -20,6 +26,7 @@ public class BloodBag extends Sprite {
             R.drawable.bb0rhminus
     };
 
+    //All available textures of not usable blood bag
     public static int[] bloodBagUsed = {
             R.drawable.bbarhplusused,
             R.drawable.bbarhminusused,
@@ -30,14 +37,21 @@ public class BloodBag extends Sprite {
             R.drawable.bb0rhplusused,
             R.drawable.bb0rhminusused
     };
+
     private final int drawing;
 
-    private double originalPositionX;
-    private double originalPositionY;
+    //Starting position of blood bag
+    private final double originalPositionX;
+    private final double originalPositionY;
     private boolean active = false;
 
+    //Each blood bag contains its own blood type
     private BloodType bloodType;
+
+    //State that determines drawing of blood bag
     private boolean doNotDraw = false;
+
+    //Stat that determines ability to move blood bag
     private boolean isMovable = true;
 
     public BloodBag(Context context, int drawing, double positionX, double positionY, float scaleFactor) {
@@ -51,13 +65,14 @@ public class BloodBag extends Sprite {
         this.originalPositionY = positionY;
         this.drawing = drawing;
 
+        //Set the blood bag's blood type
         decideBloodType(drawing);
     }
 
     public void update() {
     }
 
-//TYMCZASOWE ROZWIAZANIE
+    //Blood bag's blood type is decided by using an image
     private void decideBloodType(int drawing) {
         switch (drawing) {
             case R.drawable.bbarhplus:
@@ -93,15 +108,18 @@ public class BloodBag extends Sprite {
         this.positionY = positionY;
     }
 
+    //Return to starting position
     public void setOriginalPosition() {
         this.positionX = originalPositionX;
         this.positionY = originalPositionY;
     }
 
+    //Return blood type
     public BloodType getBloodType() {
         return this.bloodType;
     }
 
+    //Change/Return states
     public void setDoNotDraw() {
         doNotDraw = true;
     }
@@ -122,6 +140,16 @@ public class BloodBag extends Sprite {
         return active;
     }
 
+    public boolean isMovable() {
+        return isMovable;
+    }
+
+    public void setMovable(int move) {
+        if (move == 0) isMovable = false;
+        else if (move == 1) isMovable = true;
+    }
+
+    //Return original position
     public double getOriginalPositionX() {
         return originalPositionX;
     }
@@ -141,11 +169,5 @@ public class BloodBag extends Sprite {
         return drawingIndex;
     }
 
-    public boolean isMovable() {
-        return isMovable;
-    }
-    public void setMovable(int move) {
-        if (move == 0) isMovable = false;
-        else if (move == 1) isMovable = true;
-    }
+
 }

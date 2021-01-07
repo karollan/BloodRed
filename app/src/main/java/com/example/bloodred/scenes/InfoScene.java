@@ -11,22 +11,28 @@ import com.example.bloodred.gameobject.Sprite;
 import com.example.bloodred.gamepanel.NextButton;
 import com.example.bloodred.gamepanel.PreviousButton;
 import com.example.bloodred.gamepanel.ResumeButton;
-
-
+/**
+ * InfoScene is a scene that contains informations of current stage
+ * InfoScene class in an extension of a ScenePrototype
+ **/
 public class InfoScene extends ScenePrototype{
 
-
+    //Sounds
     private final FXPlayer fxPlayer;
+
+    //UI
     private final NextButton nextButton;
     private final PreviousButton previousButton;
     private final ResumeButton resumeButton;
+
+    //Page information
     private int currentPage = 0;
     private int lastPage;
 
     public InfoScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager, FXPlayer fxPlayer) {
         super(res, context, mWidth, mHeight, sceneManager);
 
-        resumeButton = new ResumeButton(context, mWidth/2,  mHeight - 120, 0.15f);
+        resumeButton = new ResumeButton(context, mWidth/2,  mHeight - 120, 0.13f);
         nextButton = new NextButton(context, mWidth - 120, mHeight - 120, 0.3f);
         previousButton = new PreviousButton(context, 120, mHeight-120, 0.3f);
 
@@ -55,7 +61,7 @@ public class InfoScene extends ScenePrototype{
                 break;
 
             case 1:
-                lastPage = 5;
+                lastPage = 4;
                 switch (currentPage) {
                     case 0:
                         text = context.getResources().getString(R.string.Stage2);
@@ -75,10 +81,6 @@ public class InfoScene extends ScenePrototype{
                         break;
                     case 4:
                         text = context.getResources().getString(R.string.Stage2_4);
-                        bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
-                        break;
-                    case 5:
-                        text = context.getResources().getString(R.string.Stage2_5);
                         bitmap = drawMultilineTextToBitmap(context, R.drawable.menubg, text);
                         break;
                 }

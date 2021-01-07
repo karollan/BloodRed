@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 
 public class RectangleCollider extends Collider {
 
+    //Collider width and height
     protected double width;
     protected double height;
 
@@ -26,6 +27,7 @@ public class RectangleCollider extends Collider {
         canvas.drawRect((float)(positionX - width/2), (float)(positionY - height/2), (float)(positionX + height/2), (float)(positionY + width/2), paint);
     }
 
+    //Return collider's sizes
     protected double getWidth() {
         return width;
     }

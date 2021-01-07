@@ -5,6 +5,12 @@ import android.content.Context;
 import com.example.bloodred.R;
 import com.example.bloodred.gameobject.Sprite;
 
+/**
+ * ChoiceMessage is an interactive element of background which cannot be moved
+ * It is used as information message
+ * ChoiceMessage class in an extension of a Sprite, which is an extension of GameObject
+ **/
+
 public class ChoiceMessage extends Sprite {
 
     private boolean isCreated;
@@ -16,6 +22,7 @@ public class ChoiceMessage extends Sprite {
     }
 
     public void update(){}
+
 
     public boolean isCreated() {
         return isCreated;

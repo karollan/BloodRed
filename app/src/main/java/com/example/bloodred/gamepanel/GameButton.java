@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.bloodred.gameobject.Sprite;
 
 /**
- * GameButton is an object that is the precursor of all button objects in game
+ * GameButton is an class that is the precursor of all button objects in game
  * GameButton class in an extension of a Sprite, which is an extension of GameObject
  **/
 

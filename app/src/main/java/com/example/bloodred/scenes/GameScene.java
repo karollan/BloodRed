@@ -30,15 +30,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.swap;
-
+/**
+ * GameScene is the most important scene it is the game itself
+ * GameOverScene class in an extension of a ScenePrototype
+ **/
 public class GameScene extends ScenePrototype{
 
+    //Limit values
     private static final int MAX_TEST_TUBE_AMOUNT = 3;
     private static final int MAX_BLOOD_GROUP_BUTTON_AMOUNT = 4;
     private static final int MAX_RH_BUTTON_AMOUNT = 2;
     private static final int MAX_BLOOD_BAG_AMOUNT = 8;
     private static final int MAX_NUMBER_OF_MISTAKES = 3;
 
+    //Game objects
     private final Syringe syringe;
     private final Patient patient;
     private final BloodRack bloodRack;
@@ -46,6 +51,7 @@ public class GameScene extends ScenePrototype{
     private final MenuButton menuButton;
     private final InfoButton infoButton;
 
+    //Sounds
     private final FXPlayer fxPlayer;
 
     //TestTubes
@@ -98,6 +104,7 @@ public class GameScene extends ScenePrototype{
     private ChoiceMessage choiceMessage;
     private boolean isChoiceMessageClosed = true;
 
+    //Score counting
     private boolean mistakeMade = false;
     private boolean secondMistake = false;
 
@@ -142,6 +149,7 @@ public class GameScene extends ScenePrototype{
         menuButton.draw(canvas);
         infoButton.draw(canvas);
 
+        //Next button only on first two stages
         if (currentStage < 2) {
             nextButton.draw(canvas);
         }
@@ -189,6 +197,7 @@ public class GameScene extends ScenePrototype{
 
         }
 
+        //Syringe is drawn until animation is done
         if (!syringe.inLastFrame()) {
             syringe.draw(canvas);
         }
@@ -294,8 +303,6 @@ public class GameScene extends ScenePrototype{
                     };
                     tube.playSoundInAnimation(r, 6);
 
-
-                    Log.d("Syringe and Tube", "Wlano krew!");
                 }
 
                 tube.update(System.currentTimeMillis());
@@ -303,9 +310,6 @@ public class GameScene extends ScenePrototype{
 
             //If all TestTubes were activated show buttons to choose BloodType
             if (activateTestTube == MAX_TEST_TUBE_AMOUNT) {
-
-                // TYMCZASOWO
-                //stageCleared = true;
 
                 //Create BloodGroupButtons
                 if (BloodGroupButtonList.size() < MAX_BLOOD_GROUP_BUTTON_AMOUNT) {
@@ -316,7 +320,6 @@ public class GameScene extends ScenePrototype{
                 //Create RhButtons only on active Blood Group Button
                 for (BloodGroupButton btn : BloodGroupButtonList) {
                     if (btn.isActive()) {
-                        Log.d("ISACTIVE", "JESTEM AKTYWNY");
                         while (RhButtonList.size() < MAX_RH_BUTTON_AMOUNT) {
                             if (RhButtonList.isEmpty()) {
                                 RhButtonList.add(new RhButton(context, RhButton.rh[RhButtonList.size()], btn.getPositionX()-GroupButtonWidth, RhButtonY, 0.3f));
@@ -357,8 +360,6 @@ public class GameScene extends ScenePrototype{
             for (BloodBag bag : bloodBagList) {
                 if (Collider.isColliding(bag.collider, bloodRack.collider) && numberOfMistakes < MAX_NUMBER_OF_MISTAKES) {
                     if (BloodType.checkBloodCompatibility(bag.getBloodType(), bloodType)) {
-                        Log.d("Number of donors", String.valueOf(numberOfDonors));
-                        Log.d("BloodBag", "Removed");
                         bag.setPosition(bloodRack.collider.getPositionX() + bag.getWidth()/2, bloodRack.collider.getPositionY() - bag.getHeight()/2);
                         bag.setDoNotDraw();
                         bag.collider.setInactive();
@@ -369,7 +370,6 @@ public class GameScene extends ScenePrototype{
                         fxPlayer.playBloodDropSound();
 
                         numberOfDonors--;
-                        Log.d("Number of donors", String.valueOf(numberOfDonors));
                     } else {
                         bag.changeTexture(bag.getDrawingIndex(), context, 0.4f);
                         bag.collider.setInactive();
@@ -381,7 +381,6 @@ public class GameScene extends ScenePrototype{
                         fxPlayer.playWrongAnswerSound();
 
                         numberOfMistakes++;
-                        Log.d("Number of mistakes", String.valueOf(numberOfMistakes));
                     }
                 }
             }
@@ -417,7 +416,6 @@ public class GameScene extends ScenePrototype{
         if (Sprite.isClicked(infoButton, x, y)) {
             fxPlayer.playButtonClickSound();
             sceneManager.drawInfoScene();
-            Log.d("klikanie", "aktywnosc");
         }
 
         //Move syringe
@@ -511,7 +509,6 @@ public class GameScene extends ScenePrototype{
                 fxPlayer.playButtonClickSound();
 
                 if (currentBloodGroup == bloodType.getBloodGroup() && btn.getRhType() == bloodType.getRhType()) {
-                    Log.d("DOBRY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                     choiceMessage = new ChoiceMessage(true, context, mWidth, mHeight);
                     isChoiceMessageClosed = false;
                     fxPlayer.playGoodAnswerSound();
@@ -522,7 +519,6 @@ public class GameScene extends ScenePrototype{
                     fxPlayer.playWrongAnswerSound();
                     if (mistakeMade) secondMistake = true;
                     mistakeMade = true;
-                    Log.d("ZLY WYBOR", currentBloodGroup.toString() + bloodType.getBloodGroup().toString() + btn.getRhType().toString() + bloodType.getRhType().toString());
                     for (BloodGroupButton BGB : BloodGroupButtonList) {
                         BGB.setInactive();
                     }
@@ -581,6 +577,7 @@ public class GameScene extends ScenePrototype{
     public int getNumberOfDonors() {
         return numberOfDonors;
     }
+
     public BloodType getRecipientBloodType() {
         return bloodType;
     }

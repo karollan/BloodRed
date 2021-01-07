@@ -4,7 +4,10 @@ import android.content.Context;
 
 import com.example.bloodred.Data;
 import com.example.bloodred.R;
-
+/**
+ * BloodGroupButton is one of buttons used in the game
+ * BloodGroupButton class in an extension of a GameButton, which is an extension of Sprite
+ **/
 public class BloodGroupButton extends GameButton {
 
     private boolean active = false;
@@ -25,6 +28,7 @@ public class BloodGroupButton extends GameButton {
         decideBloodGroup(drawing);
     }
 
+    //Blood group of this button is decided by its sprite
     private void decideBloodGroup(int drawing) {
         switch (drawing) {
             case R.drawable.groupa:

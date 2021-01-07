@@ -8,7 +8,11 @@ import androidx.core.content.ContextCompat;
 
 import com.example.bloodred.GameLoop;
 import com.example.bloodred.R;
-
+/**
+ * Performace is a class created to check performance of the game
+ * It shows current number of FPS and UPS on the screen
+ * Used during development
+ **/
 public class Performance {
     private GameLoop gameLoop;
     private Context context;

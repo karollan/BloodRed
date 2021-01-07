@@ -1,9 +1,11 @@
 package com.example.bloodred.gamepanel;
 
 import com.example.bloodred.Data;
-
+/**
+ * BloodType class contains all information of blood types and methods to compare them
+ *
+ **/
 public class BloodType {
-
 
     private Data.BloodGroups bloodGroup;
     private Data.Rh rhType;
@@ -13,6 +15,7 @@ public class BloodType {
         this.bloodGroup = bloodGroup;
     }
 
+    //Return blood type
     public Data.BloodGroups getBloodGroup() {
         return this.bloodGroup;
     }
@@ -25,6 +28,7 @@ public class BloodType {
         return this.rhType.toString().contains("Plus") ? "Rh+" : "Rh-";
     }
 
+    //Calculate number of possible blood types that can be donated to recipient
     public static int numberOfPossibleDonors(BloodType recipient) {
         if (recipient.rhType == Data.Rh.RhPlus) {
             if (recipient.bloodGroup == Data.BloodGroups.AB) {
@@ -44,6 +48,8 @@ public class BloodType {
             }
         } return 0;
     }
+
+    //Check if two blood types can be mixed
     public static boolean checkBloodCompatibility(BloodType donor, BloodType recipient) {
         if (recipient.rhType == Data.Rh.RhPlus) {
             if (recipient.bloodGroup == Data.BloodGroups.AB) {

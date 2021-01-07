@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Data is a collection of enum types data
+ * Data is a collection of enum types data and
  *
  **/
 
@@ -38,7 +38,7 @@ public class Data {
                 AB,
                 Zero;
 
-
+                //Randomize blood group
                 private static final BloodGroups[] GROUPS = values();
                 private static final int SIZE = GROUPS.length;
                 private static final Random RANDOM = new Random();
@@ -52,7 +52,7 @@ public class Data {
                 RhPlus,
                 RhMinus;
 
-
+                //Randomize rh type
                 private static final Rh[] GROUPS = values();
                 private static final int SIZE = GROUPS.length;
                 private static final Random RANDOM = new Random();

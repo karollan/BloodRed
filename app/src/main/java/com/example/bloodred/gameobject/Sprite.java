@@ -21,10 +21,14 @@ import java.util.ArrayList;
 
 public abstract class Sprite extends GameObject {
 
+    //Sprite bitmap
     private Bitmap bmp;
 
+    //Sprite measurements
     private float width;
     private float height;
+
+    //If sprite is created with collider
     public Collider collider;
     private Data.ColliderPosition colliderPositionRelativeToSprite;
 
@@ -68,6 +72,7 @@ public abstract class Sprite extends GameObject {
         collider = new RectangleCollider(positionX, positionY, position.x, position.y, width, height, drawable);
     }
 
+    //Draw the Sprite on canvas and set the position of collider (draw collider if needed)
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bmp, (float) positionX - width / 2, (float) positionY - height / 2, null);
         if (collider != null) {
@@ -78,7 +83,7 @@ public abstract class Sprite extends GameObject {
         }
     }
 
-
+    //Return sprite's width and height
     public float getWidth() {
         return width;
     }
@@ -105,7 +110,7 @@ public abstract class Sprite extends GameObject {
         return (int)(bmp.getHeight()*scaleFactor);
     }
 
-    //Change texture
+    //Change bitmap of sprite
     public void changeTexture(int drawing, Context context, double scaleFactor) {
         bmp = BitmapFactory.decodeResource(context.getResources(), drawing);
         bmp = bmp.createScaledBitmap(bmp, (int) (bmp.getWidth() * scaleFactor), (int) (bmp.getHeight() * scaleFactor), true);

@@ -7,34 +7,39 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import com.example.bloodred.Data;
-
+/**
+ * SpriteSheet is an object which implements method from GameObject for drawing the object as a image
+ *
+ **/
 public class SpriteSheet extends GameObject {
 
+    //SpriteSheet can be created with a collider
     public Collider collider;
     private Data.ColliderPosition colliderPositionRelativeToSprite;
+
     private Bitmap bitmap;		// the animation sequence
     private Rect sourceRect;	// the rectangle to be drawn from the animation bitmap
     private int frameNr;		// number of frames in animation
     private int currentFrame;	// the current frame
     private long frameTicker;	// the time of the last frame update
     private int framePeriod;	// milliseconds between each frame (1000/fps)
-    private int delay;
-    private final int animationTime;
+    private int delay;          // if animation starts with delay
+    private final int animationTime; // time to complete animation from start to finish
 
     private int spriteWidth;	// the width of the sprite to calculate the cut out rectangle
     private int spriteHeight;	// the height of the sprite
 
-    private final int numberOfPauses;
-    private int stopFrameNumber;
-    private final int framesPerAnimation;
-    private int stopCounter;
+    private final int numberOfPauses; //number of animation stages
+    private int stopFrameNumber; // frame at which animation pauses
+    private final int framesPerAnimation; // number of frames played for each stage
+    private int stopCounter; //Number of remaining pauses
 
-    private boolean animation;
+    private boolean animation;  // state that decides if animation can start
 
     //Sound in animation
-    private Runnable r;
-    private int soundAtFrameNr;
-    private boolean soundInAnimation;
+    private Runnable r;  // contains method which plays sound
+    private int soundAtFrameNr; // number of frame at which sound is played
+    private boolean soundInAnimation; //state which decides if animation is played with sound
 
 
     //SpriteSheet Contructor
@@ -70,54 +75,24 @@ public class SpriteSheet extends GameObject {
         return x >= (spriteSheet.getPositionX() - (float)spriteSheet.getSpriteWidth()/2) && x < (spriteSheet.getPositionX() + (float)spriteSheet.getSpriteWidth()/2) && y >= (spriteSheet.getPositionY() - (float)spriteSheet.getSpriteHeight()/2) && y < (spriteSheet.getPositionY() + (float)spriteSheet.getSpriteHeight()/2);
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-    public Rect getSourceRect() {
-        return sourceRect;
-    }
-    public void setSourceRect(Rect sourceRect) {
-        this.sourceRect = sourceRect;
-    }
+
     public int getFrameNr() {
         return frameNr;
-    }
-    public void setFrameNr(int frameNr) {
-        this.frameNr = frameNr;
     }
     public int getCurrentFrame() {
         return currentFrame;
     }
-    public void setCurrentFrame(int currentFrame) {
-        this.currentFrame = currentFrame;
-    }
-    public int getFramePeriod() {
-        return framePeriod;
-    }
-    public void setFramePeriod(int framePeriod) {
-        this.framePeriod = framePeriod;
-    }
     public int getSpriteWidth() {
         return spriteWidth;
     }
-    public void setSpriteWidth(int spriteWidth) {
-        this.spriteWidth = spriteWidth;
-    }
     public int getSpriteHeight() {
         return spriteHeight;
-    }
-    public void setSpriteHeight(int spriteHeight) {
-        this.spriteHeight = spriteHeight;
     }
 
     public void update(){};
 
     public void startAnimation() {
         animation = true;
-        Log.d("animuje", "animacje");
     }
 
     public boolean inAnimation() {
@@ -186,7 +161,7 @@ public class SpriteSheet extends GameObject {
     public void draw(Canvas canvas) {
         // where to draw the sprite
         if (collider != null && collider.setToDraw()) {
-            //collider.draw(canvas);
+            collider.draw(canvas);
         }
 
         Rect destRect = new Rect((int)getPositionX()-spriteWidth/2, (int)getPositionY()-spriteHeight/2, (int)getPositionX() + spriteWidth/2, (int)getPositionY() + spriteHeight/2);

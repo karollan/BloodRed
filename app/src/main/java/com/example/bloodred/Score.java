@@ -1,7 +1,10 @@
 package com.example.bloodred;
 
 import java.util.ArrayList;
-
+/**
+ * Score is a class that is responsible for game score
+ * It contains all information of current score and calculates number of gold stars
+ **/
 public class Score {
 
     private static final int MAX_SCORE_STAR_AMOUNT = 5;

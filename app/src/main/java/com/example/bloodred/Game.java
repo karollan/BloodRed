@@ -11,8 +11,8 @@ import com.example.bloodred.scenes.SceneManager;
 
 
 /**
- * Game manages all object in the game and is responsible for updating all states and render
- * all objects to the screen
+ * Game is the main class that is an extension of SurfaceView
+ * All surface changes and touch events are handled in this class
 **/
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -41,7 +41,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //Scene Manager
         sceneManager = new SceneManager(getContext(), mWidth, mHeight);
 
-        //Initialize game panels
+        //Check performance
         performance = new Performance(gameLoop, getContext());
 
         setFocusable(true);

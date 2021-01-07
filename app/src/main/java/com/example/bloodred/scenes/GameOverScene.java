@@ -15,21 +15,27 @@ import com.example.bloodred.gamepanel.StatusText;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * GameOverScene is a scene that is shown after losing or winning the game
+ * GameOverScene class in an extension of a ScenePrototype
+ **/
 public class GameOverScene extends ScenePrototype {
 
+    //UI elements
     private final RestartButton restartButton;
     private final ExitButton exitButton;
 
     //Score
     private final List<ScoreStar> scoreStarList = new ArrayList<ScoreStar>();
     private final StatusText statusText;
-    private final FXPlayer fxPlayer;
     private int firstScoreStarX;
     private final int scoreStarY;
     private final int spaceBetweenStars = 50;
     private int starAnimationDelay = 0;
     private ScoreStar lastStar;
+
+    //Sound
+    private final FXPlayer fxPlayer;
 
     public GameOverScene(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager, FXPlayer fxPlayer) {
         super(res, context, mWidth, mHeight, sceneManager);
@@ -66,7 +72,7 @@ public class GameOverScene extends ScenePrototype {
                 lastStar = scoreStarList.get(0);
             }
 
-
+            //Update Score Stars
             for (ScoreStar star : scoreStarList) {
 
                 //Play stars sounds

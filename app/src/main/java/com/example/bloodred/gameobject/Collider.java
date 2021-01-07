@@ -16,6 +16,7 @@ import com.example.bloodred.Data;
 
 public abstract class Collider extends GameObject {
 
+    //Collider position
     private final double colliderPosX;
     private final double colliderPosY;
     private final boolean drawable;
@@ -30,6 +31,7 @@ public abstract class Collider extends GameObject {
         this.colliderPosY = colliderPosY;
         this.drawable = drawable;
 
+        //Collider's paint
         this.paint = new Paint();
         paint.setColor(Color.RED);
         PathEffect dashPath = new DashPathEffect(new float[]{0.5f,0.5f},1);
@@ -43,6 +45,8 @@ public abstract class Collider extends GameObject {
     /**
      * IsColliding checks if two Collider objects are colliding, based on their positions
      * and type
+     * It does not check collisions between circle and rectangle collider because it was not needed
+     * but it can be added
      **/
     public static boolean isColliding(Collider obj1, Collider obj2) {
         if (obj1.active && obj2.active) {
@@ -61,6 +65,7 @@ public abstract class Collider extends GameObject {
 
     }
 
+    //Collider can be disabled
     public void setInactive() {
         active = false;
     }
@@ -69,12 +74,15 @@ public abstract class Collider extends GameObject {
         active = true;
     }
 
+    //Set collider's position
     public void setPosition(double positionX, double positionY) {
         this.positionX = positionX + colliderPosX;
         this.positionY = positionY + colliderPosY;
     }
 
     //ColliderPos function checks what position is needed through checking enum and returns vector with x and y
+    //It is easier to create fixed positions for colliders because it is easier to use and that solution
+    //provides sufficient accuracy
     public static PointF colliderPos(Data.ColliderPosition pos, float width, float height) {
         PointF position = new PointF();
 
@@ -136,6 +144,7 @@ public abstract class Collider extends GameObject {
         }
     }
 
+    //Collider can be drawn on canvas if needed
     public boolean setToDraw() {
         return this.drawable;
     }

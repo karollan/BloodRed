@@ -3,7 +3,10 @@ package com.example.bloodred;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
-
+/**
+ * FXPlayer is a class used to manage and play sounds
+ *
+ **/
 public class FXPlayer {
 
     private static SoundPool soundPool;
@@ -80,7 +83,7 @@ public class FXPlayer {
         soundPool.play(bloodDropSound, 1f, 1f, 1, 0, 1f);
     }
 
-
+    //When sound is muted
     public void changeState(boolean state) {
         if (state) {
             soundPool.release();

@@ -8,31 +8,44 @@ import android.util.Log;
 import com.example.bloodred.FXPlayer;
 import com.example.bloodred.R;
 import com.example.bloodred.Score;
-
+/**
+ * SceneManager is an class which only purpose is to manage scenes due to user decisions
+ *
+ **/
 
 public class SceneManager {
+
+    //Game sounds
     private final FXPlayer fXPlayer;
+
+    //All scenes in game
     private GameOverScene gameOverScene;
     private MenuScene menuScene;
-    protected final int mWidth;
-    protected final int mHeight;
-    private final Context context;
     private GameScene gameScene;
     private InfoScene infoScene;
 
+    //User screen sizes
+    protected final int mWidth;
+    protected final int mHeight;
+    private final Context context;
 
     public SceneManager(Context context, int mWidth, int mHeight) {
         this.context = context;
         this.mWidth = mWidth;
         this.mHeight = mHeight;
+
+        //Create all scenes and sound player
         fXPlayer = new FXPlayer(context);
         infoScene = new InfoScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
         gameOverScene = new GameOverScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
         menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
         gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this, fXPlayer);
+
+        //GameScene is first scene that is shown after starting the game
         gameScene.setActive();
     }
 
+    //Scene is drawn on canvas only if active
     public void draw(Canvas canvas) {
 
         if (menuScene.isActive()) {
@@ -44,7 +57,6 @@ public class SceneManager {
         }
 
         if (infoScene.isActive()) {
-            Log.d("klikanie", "aktywnosc");
             infoScene.drawScene(canvas);
         }
 
@@ -55,7 +67,8 @@ public class SceneManager {
     }
 
 
-    //Tymczasowe rozwiązanie
+    //Decision which scene is drawn by changing active status. It is not the best solution but for small number
+    //of scenes it is good. Change of this solution is needed if the game grows bigger.
     public void drawInfoScene() {
         infoScene.setActive();
         gameScene.setInactive();
@@ -84,6 +97,7 @@ public class SceneManager {
         infoScene.setInactive();
     }
 
+    //Touch screen events are only working on active scene
     public void infoSceneClickEvents(double x, double y) {
         if (infoScene.isActive()) {
             infoScene.clickEvents(x, y);
@@ -119,6 +133,7 @@ public class SceneManager {
         }
     }
 
+    //Update all scenes
     public void update() {
         gameScene.update();
         infoScene.update();
@@ -126,16 +141,20 @@ public class SceneManager {
         gameOverScene.update();
     }
 
+    //Return user screen sizes
     public int getmWidth() {return mWidth;}
 
     public int getmHeight() {return mHeight;}
 
+    //Return current game stange
     public int getCurrentGameStage() {
         return gameScene.getCurrentStage();
     }
 
+    //Return game result
     public boolean getGameResult() {return gameScene.getGameResult();}
 
+    //If game restarted recreate all scenes and reset score
     public void restartGame() {
         menuScene = new MenuScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.menubg), context, mWidth, mHeight, this, fXPlayer);
         gameScene = new GameScene(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg), context, mWidth, mHeight, this, fXPlayer);

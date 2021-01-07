@@ -12,15 +12,27 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import com.example.bloodred.gamebackground.Background;
-
+/**
+ * ScenePrototype is an abstract class which is the foundation of all scenes in game
+ *
+ **/
 public abstract class ScenePrototype {
 
+    //Bitmap and context for creating background
     protected Bitmap bitmap;
     protected Context context;
+
+    //User phone resolution
     protected int mWidth;
     protected int mHeight;
+
+    //Special class that manages all scenes
     protected SceneManager sceneManager;
+
+    //Every scene have background set on creation
     protected Background background;
+
+    //Scene is shown or not
     private boolean active;
 
     public ScenePrototype(Bitmap res, Context context, int mWidth, int mHeight, SceneManager sceneManager) {
@@ -32,6 +44,7 @@ public abstract class ScenePrototype {
         background = new Background(bitmap);
     }
 
+    //Scene managing by changing its active status
     public boolean isActive() {
         return active;
     }
@@ -47,50 +60,48 @@ public abstract class ScenePrototype {
     public abstract void drawScene(Canvas canvas);
     public abstract void update();
 
-    protected Bitmap drawMultilineTextToBitmap(Context gContext,
-                                            int gResId,
-                                            String gText) {
-
-        // prepare canvas
+    //Method to add multiline text to background, text is drawn on background image and then rendered
+    protected Bitmap drawMultilineTextToBitmap(Context gContext, int gResId, String gText) {
+        // Prepare canvas
         Resources resources = gContext.getResources();
         float scale = resources.getDisplayMetrics().density;
         Bitmap bitmap = BitmapFactory.decodeResource(resources, gResId);
 
         android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
-        // set default bitmap config if none
+        // Set default bitmap config if none
         if(bitmapConfig == null) {
             bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
         }
-        // resource bitmaps are imutable,
-        // so we need to convert it to mutable one
+        // Resource bitmaps are imutable,
+        // So we need to convert it to mutable one
         bitmap = bitmap.copy(bitmapConfig, true);
 
         Canvas canvas = new Canvas(bitmap);
 
-        // new antialiased Paint
+        // New antialiased Paint
         TextPaint paint=new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        // text color - #3D3D3D
+        // Text color - #3D3D3D
         paint.setColor(Color.rgb(255,255,255));
-        // text size in pixels
+        // Text size in pixels
         paint.setTextSize((int) (30 * scale));
-        // text shadow
+        // Text shadow
         paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
 
-        // set text width to canvas width minus 100dp padding
+        // Set text width to canvas width minus 100dp padding
         int textWidth = canvas.getWidth() - (int) (100 * scale);
 
-        // init StaticLayout for text
+        // Init StaticLayout for text
         StaticLayout textLayout = new StaticLayout(
                 gText, paint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
-        // get height of multiline text
+        // Get height of multiline text
         int textHeight = textLayout.getHeight();
 
-        // get position of text's top left corner
+        // Get position of text's top left corner
         float x = (bitmap.getWidth() - textWidth)/2;
         float y = (bitmap.getHeight() - textHeight)/3;
 
-        // draw text to the Canvas center
+        // Draw text to the Canvas center
         canvas.save();
         canvas.translate(x, y);
         textLayout.draw(canvas);

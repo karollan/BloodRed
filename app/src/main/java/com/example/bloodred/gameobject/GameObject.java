@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 
 public abstract class GameObject {
 
+    //Object position
     protected double positionX;
     protected double positionY;
 
@@ -29,6 +30,7 @@ public abstract class GameObject {
 
     public abstract void update();
 
+    //Return current position
     public double getPositionX() {
         return positionX;
     }
